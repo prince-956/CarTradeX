@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Seller DashBoard{% endblock %}  
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/seller_dashboard.css') }}">
+{% endblock %}
+
+{% block body %}
+<section class="page-header">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="page-title fade-in">My Car Listings</h1>
+                <p class="page-subtitle fade-in">Manage and track your car selling progress</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card slide-up">
+                        <div class="stat-icon total">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="stat-number">{{ total }}</div>
+                        <div class="stat-label">Total Listings</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card slide-up">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-number">{{ pending }}</div>
+                        <div class="stat-label">Pending Review</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card slide-up">
+                        <div class="stat-icon approved">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-number">{{ approved }}</div>
+                        <div class="stat-label">Approved</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="stat-card slide-up">
+                        <div class="stat-icon rejected">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-number" id="rejectedCars">{{ rejected }}</div>
+                        <div class="stat-label">Needs Attention</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="container">
+        <div class="filters-section">
+            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <div>
+                    <h5 class="mb-3">Filter by Status:</h5>
+                    <button class="filter-btn active" data-filter="all">
+                        All Listings
+                    </button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="approved">Approved</button>
+                    <button class="filter-btn" data-filter="rejected">Needs Attention</button>
+                    <button class="filter-btn" data-filter="sold">Sold</button>
+                </div>
+                <div>
+                    <a href="{{url_for('buy')}}" class="btn btn-primary-custom">
+                        <i class="fas fa-plus me-2"></i>Add New Car
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Listings Section -->
+    <section class="container mb-5">
+        <div class="listings-container">
+            <div class="row">
+{% for car in requests %}
+  <div class="col-12 mb-4">
+    <div class="car-card">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <div class="car-image">
+            <img src="{{ url_for('static', filename='images/' + car.image) }}">
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="car-details">
+
+            <h5 class="car-title">
+              {{ car.brand }} {{ car.model }} ({{ car.year }})
+            </h5>
+
+            <div class="car-price">
+              ₹{{ "{:,}".format(car.price) }}
+            </div>
+
+            <span class="car-status status-{{ car.status|lower }}">
+              {{ car.status }}
+            </span>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% else %}
+  <div class="empty-state">
+    No Listings Found
+  </div>
+{% endfor %}
+</div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/seller_dashboard.js') }}"></script>
+{% endblock %}

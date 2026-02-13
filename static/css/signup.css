@@ -1,0 +1,76 @@
+.signup-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.signup-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+.brand-logo {
+  color: #667eea;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+.form-control {
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  padding: 15px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+.btn-signup {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 15px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.btn-signup:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+.password-strength {
+  height: 4px;
+  border-radius: 2px;
+  margin-top: 5px;
+  transition: all 0.3s ease;
+}
+.strength-weak {
+  background: #dc3545;
+  width: 25%;
+}
+.strength-medium {
+  background: #ffc107;
+  width: 50%;
+}
+.strength-good {
+  background: #28a745;
+  width: 75%;
+}
+.strength-strong {
+  background: #198754;
+  width: 100%;
+}
+.input-group-text {
+  background: #f8f9fa;
+  border: 2px solid #e2e8f0;
+  border-right: none;
+}
+.form-control.is-valid {
+  border-color: #198754;
+}
+.form-control.is-invalid {
+  border-color: #dc3545;
+}
+.valid-feedback,
+.invalid-feedback {
+  font-size: 0.875rem;
+  margin-top: 5px;
+}

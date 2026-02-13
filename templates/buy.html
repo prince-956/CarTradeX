@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+
+{% block title %}Buy a Car - CarTradeX{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/buy.css')}}">
+{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+        <h1 class="display-4 fw-bold mb-3">Find Your Perfect Car</h1>
+        <p class="lead mb-4">
+          Discover thousands of quality vehicles from trusted dealers and
+          private sellers
+        </p>
+
+        <!-- Quick Search Bar -->
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="d-flex gap-2 flex-wrap justify-content-center">
+              <input
+                type="text"
+                class="form-control search-bar flex-grow-1"
+                placeholder="Search by make, model, or keyword..."
+                id="quickSearch"
+              />
+              <button class="btn search-btn" onclick="performQuickSearch()">
+                <i class="fas fa-search me-2"></i>Search
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">2,500+</div>
+          <div class="stats-label">Cars Available</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">98%</div>
+          <div class="stats-label">Customer Satisfaction</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">150+</div>
+          <div class="stats-label">Trusted Dealers</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">24/7</div>
+          <div class="stats-label">Support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+
+      <!-- Filters Sidebar -->
+      <div class="col-lg-3">
+        <div class="filter-sidebar position-sticky" style="top: 100px;" data-aos="fade-right">
+
+          <h4 class="filter-title">
+            <i class="fas fa-filter"></i> Filters
+          </h4>
+
+          <!-- Brand -->
+          <div class="filter-group block">
+            <label class="filter-label">Brands + Models</label>
+            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="All"> All</label>
+            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="Honda"> Honda</label>
+            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="Suzuki"> Suzuki</label>
+            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="Hyundai"> Hyundai</label>
+          </div>
+
+          <!-- Price -->
+          <div class="filter-group block">
+            <label class="filter-label">Price</label>
+            <label><input type="radio" class="filter" name="price" data-name="price" value="All"> All</label>
+            <label><input type="radio" class="filter" name="price" data-name="price" value="30000A"> 30000 & Above</label>
+            <label><input type="radio" class="filter" name="price" data-name="price" value="50000A"> 50000 & Above</label>
+          </div>
+
+          <!-- Year -->
+          <div class="filter-group block">
+            <label class="filter-label">Year</label>
+            <label><input type="radio" class="filter" name="year" data-name="year" value="All"> All</label>
+            <label><input type="radio" class="filter" name="year" data-name="year" value="2024A"> 2024 & Above</label>
+            <label><input type="radio" class="filter" name="year" data-name="year" value="2023A"> 2023 & Above</label>
+            <label><input type="radio" class="filter" name="year" data-name="year" value="2022A"> 2022 & Above</label>
+          </div>
+
+          <!-- Fuel -->
+          <div class="filter-group block">
+            <label class="filter-label">Fuel Type</label>
+            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="All"> All</label>
+            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Gasoline"> Gasoline</label>
+            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Hybrid"> Hybrid</label>
+            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Electric"> Electric</label>
+            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Diesel"> Diesel</label>
+          </div>
+
+          <!-- Transmission -->
+          <div class="filter-group block">
+            <label class="filter-label">Transmission</label>
+            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="All"> All</label>
+            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="AUTOMATIC"> Automatic</label>
+            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="MANUAL"> Manual</label>
+            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="CVT"> CVT</label>
+          </div>
+
+          <!-- Mileage -->
+          <div class="filter-group block">
+            <label class="filter-label">Mileage</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="All"> All</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="0-25000"> Under 25,000</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="25000-50000"> 25,000 - 50,000</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="50000-75000"> 50,000 - 75,000</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="75001+"> Over 75,001</label>
+          </div>
+
+          <!-- City (NEW FILTER) -->
+<div class="filter-group block">
+  <label class="filter-label">City</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="All"> All</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="delhi"> Delhi</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="mumbai"> Mumbai</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="pune"> Pune</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="hyderabad"> Hyderabad</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="ahmedabad"> Ahmedabad</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="kolkata"> Kolkata</label>
+  <label><input type="radio" class="filter" name="city" data-name="city" value="chennai"> Chennai</label>
+</div>
+
+<!-- Owners (NEW FILTER) -->
+<div class="filter-group block">
+  <label class="filter-label">Owners</label>
+  <label><input type="radio" class="filter" name="owners" data-name="owners" value="All"> All</label>
+  <label><input type="radio" class="filter" name="owners" data-name="owners" value="1"> 1st Owner</label>
+  <label><input type="radio" class="filter" name="owners" data-name="owners" value="2"> 2nd Owner</label>
+  <label><input type="radio" class="filter" name="owners" data-name="owners" value="3"> 3+ Owners</label>
+</div>
+
+        </div>
+      </div>
+
+      <!-- Cars Listing -->
+      <div class="col-lg-9">
+        
+        <!-- Sort Controls -->
+        <div class="sort-controls d-flex justify-content-between align-items-center flex-wrap mb-3" data-aos="fade-left">
+          <div>
+            <h3 class="section-title mb-0">Available Cars</h3>
+            <p class="text-muted mb-0">Showing <span id="carCount"></span> cars</p>
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            <label class="fw-semibold text-muted">Sort by:</label>
+            <select class="form-select" style="width:auto" id="sortFilter">
+              <option value="newest">Newest First</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="mileage-low">Mileage: Low to High</option>
+              <option value="year-new">Year: Newest First</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cars Grid -->
+        <div class="row" id="cars-container" data-aos="fade-up">
+          {% include "car_cards.html" %}
+        </div>
+
+        <!-- No Results -->
+        <div id="noResults" class="empty-state text-center d-none">
+          <i class="fas fa-car-crash"></i>
+          <h4>No cars found</h4>
+          <p>Try adjusting your filters</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/buy.js')}}"></script>
+{% endblock %}

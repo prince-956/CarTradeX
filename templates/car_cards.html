@@ -1,0 +1,31 @@
+{% if cars %}
+{% for car in cars %}
+<div class="col-lg-4 col-md-6 mb-4">
+  <div class="card car-card h-100">
+
+    <img src="{{ url_for('static', filename='images/' ~ car.image) }}"
+     alt="{{ car.brand }}"
+     class="car-image"> 
+
+
+    <div class="car-info p-3">
+      <h5 class="car-title">{{ car.brand }} {{ car.model }}</h5>
+
+      <p class="text-muted mb-1">{{ car.year }} • {{ car.fuel_type }}</p>
+
+      <p><i class="fas fa-tachometer-alt"></i> {{ car.kms_driven }} km</p>
+
+      <div class="price-section">
+        <div class="price">₹{{ car.price }}</div>
+        <a href="{{ url_for('car_details', car_id=car.car_id) }}" class="btn view-btn mt-2">View Details</a>
+
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% else %}
+<p class="text-center text-muted">No cars available for sale.</p>
+{% endif %}
