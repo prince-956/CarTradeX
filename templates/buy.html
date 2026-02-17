@@ -21,7 +21,7 @@
         </p>
 
         <!-- Quick Search Bar -->
-        <div class="row justify-content-center">
+        <!-- <div class="row justify-content-center">
           <div class="col-lg-8">
             <div class="d-flex gap-2 flex-wrap justify-content-center">
               <input
@@ -35,7 +35,7 @@
               </button>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -88,81 +88,111 @@
 
           <!-- Brand -->
           <div class="filter-group block">
-            <label class="filter-label">Brands + Models</label>
-            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="All"> All</label>
-            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="Honda"> Honda</label>
-            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="Suzuki"> Suzuki</label>
-            <label><input type="checkbox" class="filter" name="brand" data-name="brand" value="Hyundai"> Hyundai</label>
+            <label class="filter-label">Brands</label>
+            <label><input type="radio" class="filter" name="brand" value="Maruti Suzuki">Maruti Suzuki</label>
+            <label><input type="radio" class="filter" name="brand" value="Hyundai">Hyundai</label>
+            <label><input type="radio" class="filter" name="brand" value="Honda">Honda</label>
+            <label><input type="radio" class="filter" name="brand" value="Tata">Tata</label>
+            <label><input type="radio" class="filter" name="brand" value="Toyota">Toyota</label>
+            <label><input type="radio" class="filter" name="brand" value="Mahindra">Mahindra</label>
+            <label><input type="radio" class="filter" name="brand" value="Skoda">Skoda</label>
+            <label><input type="radio" class="filter" name="brand" value="Kia">Kia</label>
+            <label><input type="radio" class="filter" name="brand" value="Volkswagen">Volkswagen</label>
+            <label><input type="radio" class="filter" name="brand" value="Renault">Renault</label>
           </div>
 
-          <!-- Price -->
-          <div class="filter-group block">
-            <label class="filter-label">Price</label>
-            <label><input type="radio" class="filter" name="price" data-name="price" value="All"> All</label>
-            <label><input type="radio" class="filter" name="price" data-name="price" value="30000A"> 30000 & Above</label>
-            <label><input type="radio" class="filter" name="price" data-name="price" value="50000A"> 50000 & Above</label>
-          </div>
-
+          
           <!-- Year -->
           <div class="filter-group block">
             <label class="filter-label">Year</label>
-            <label><input type="radio" class="filter" name="year" data-name="year" value="All"> All</label>
-            <label><input type="radio" class="filter" name="year" data-name="year" value="2024A"> 2024 & Above</label>
-            <label><input type="radio" class="filter" name="year" data-name="year" value="2023A"> 2023 & Above</label>
-            <label><input type="radio" class="filter" name="year" data-name="year" value="2022A"> 2022 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2024A">2024 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2023A">2022 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2020A">2020 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2018A">2018 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2016A">2016 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2014A">2014 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2012A">2012 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2010A">2010 & Above</label>
           </div>
+
+          <!-- KMs Driven -->
+          <div class="filter-group block">
+            <label class="filter-label">KMs Driven</label>
+            <label><input type="radio" class="filter" name="kms" value="10000B">10,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="30000B">30,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="50000B">50,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="75000B">75,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="100000B">1,00,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="125000B">1,25,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="150000B">1,50,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="175000B">1,75,000 kms or less</label>
+          </div>
+
+          <!-- Price -->
+          <!-- <div class="filter-group block">
+            <label class="filter-label">Price</label>
+            <label><input type="radio" class="filter" name="price" data-name="price" value="30000A"> 30000 & Above</label>
+            <label><input type="radio" class="filter" name="price" data-name="price" value="50000A"> 50000 & Above</label>
+          </div> -->
 
           <!-- Fuel -->
           <div class="filter-group block">
             <label class="filter-label">Fuel Type</label>
-            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="All"> All</label>
-            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Gasoline"> Gasoline</label>
-            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Hybrid"> Hybrid</label>
-            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Electric"> Electric</label>
-            <label><input type="radio" class="filter" name="fuel" data-name="fuel_type" value="Diesel"> Diesel</label>
+            <label><input type="checkbox" class="filter" name="fuel_type" value="PETROL">Petrol</label>
+            <label><input type="checkbox" class="filter" name="fuel_type" value="DIESEL"> Diesel</label>
+            <label><input type="checkbox" class="filter" name="fuel_type" value="ELECTRIC"> Electric</label>
           </div>
 
           <!-- Transmission -->
           <div class="filter-group block">
             <label class="filter-label">Transmission</label>
-            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="All"> All</label>
-            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="AUTOMATIC"> Automatic</label>
-            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="MANUAL"> Manual</label>
-            <label><input type="radio" class="filter" name="transmission" data-name="transmission" value="CVT"> CVT</label>
+            <label><input type="checkbox" class="filter" name="transmission" value="AUTOMATIC"> Automatic</label>
+            <label><input type="checkbox" class="filter" name="transmission" value="MANUAL"> Manual</label>
           </div>
 
+          <!-- Seates -->
+          <!-- <div class="filter-group block">
+            <label class="filter-label">Seates</label>
+            <label><input type="checkbox" class="filter" name="seates" data-name="seates" value="4">4 seater</label>
+            <label><input type="checkbox" class="filter" name="seates" data-name="seates" value="5">5 seater</label>
+            <label><input type="checkbox" class="filter" name="seates" data-name="seates" value="6+">6+ seater</label>
+          </div> -->
+
           <!-- Mileage -->
-          <div class="filter-group block">
+          <!-- <div class="filter-group block">
             <label class="filter-label">Mileage</label>
-            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="All"> All</label>
             <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="0-25000"> Under 25,000</label>
             <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="25000-50000"> 25,000 - 50,000</label>
             <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="50000-75000"> 50,000 - 75,000</label>
             <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="75001+"> Over 75,001</label>
-          </div>
+          </div> -->
 
           <!-- City (NEW FILTER) -->
 <div class="filter-group block">
   <label class="filter-label">City</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="All"> All</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="delhi"> Delhi</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="mumbai"> Mumbai</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="pune"> Pune</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="hyderabad"> Hyderabad</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="ahmedabad"> Ahmedabad</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="kolkata"> Kolkata</label>
-  <label><input type="radio" class="filter" name="city" data-name="city" value="chennai"> Chennai</label>
+  <label><input type="radio" class="filter" name="city" value="Rajkot">Rajkot</label>
+  <label><input type="radio" class="filter" name="city" value="Ahmedabad">Ahmedabad</label>
+  <label><input type="radio" class="filter" name="city" value="Mumbai">Mumbai</label>
+  <label><input type="radio" class="filter" name="city" value="Pune">Pune</label>
+  <label><input type="radio" class="filter" name="city" value="Jaipur">Jaipur</label>
+  <label><input type="radio" class="filter" name="city" value="Indore">Indore</label>
+  <label><input type="radio" class="filter" name="city" value="Goa">Goa</label>
+  <label><input type="radio" class="filter" name="city" value="Lucknow">Lucknow</label>
+  <label><input type="radio" class="filter" name="city" value="Delhi">Delhi</label>
+  <label><input type="radio" class="filter" name="city" value="Banglore">Banglore</label>
+  <label><input type="radio" class="filter" name="city" value="Chennai">Chennai</label>
+  <label><input type="radio" class="filter" name="city" value="Hyderabad">Hyderabad</label>
+  <label><input type="radio" class="filter" name="city" value="Kolkata">Kolkata</label>
 </div>
 
 <!-- Owners (NEW FILTER) -->
 <div class="filter-group block">
   <label class="filter-label">Owners</label>
-  <label><input type="radio" class="filter" name="owners" data-name="owners" value="All"> All</label>
-  <label><input type="radio" class="filter" name="owners" data-name="owners" value="1"> 1st Owner</label>
-  <label><input type="radio" class="filter" name="owners" data-name="owners" value="2"> 2nd Owner</label>
-  <label><input type="radio" class="filter" name="owners" data-name="owners" value="3"> 3+ Owners</label>
+  <label><input type="checkbox" class="filter" name="owners" value="1">1st Owner</label>
+  <label><input type="checkbox" class="filter" name="owners" value="2">2nd Owner</label>
+  <label><input type="checkbox" class="filter" name="owners" value="3">3+ Owners</label>
 </div>
-
+<p class="text-muted mb-0">You've reached the end</p>
         </div>
       </div>
 

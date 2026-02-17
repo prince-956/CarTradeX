@@ -25,52 +25,89 @@
           <i class="fas fa-handshake me-2"></i>Hassle-Free Process
         </p>
 
-        <!-- Enhanced Search Container -->
-        <div class="search-container" data-aos="fade-up" data-aos-delay="200">
-          <div class="row g-3">
-            <div class="col-lg-3 col-md-6">
-              <label class="form-label fw-semibold text-muted">Car Brand</label>
-              <select class="form-select" style="width:auto" id="sortFilter">
-                <option value="">Select Brand</option>
-                <option value="Toyota">Toyota</option>
-                <option value="Honda">Honda</option>
-                <option value="BMW">BMW</option>
-                <option value="Mercedes-Benz">Mercedes-Benz</option>
-                <option value="Audi">Audi</option>
-                <option value="Ford">Ford</option>
-              </select>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <label class="form-label fw-semibold text-muted"
-                >Budget Range</label
-              >
-              <select class="form-select" style="width:auto" id="sortFilter">
-                <option value="">Select Budget</option>
-                <option value="0-25000">Under $25,000</option>
-                <option value="25000-50000">$25,000 - $50,000</option>
-                <option value="50000-75000">$50,000 - $75,000</option>
-                <option value="75000+">Above $75,000</option>
-              </select>
-            </div>
-            <div class="col-lg-3 col-md-6">
-              <label class="form-label fw-semibold text-muted">Location</label>
-              <select class="form-select" style="width:auto" id="sortFilter">
-                <option value="">Select City</option>
-                <option value="New York">New York</option>
-                <option value="Los Angeles">Los Angeles</option>
-                <option value="Chicago">Chicago</option>
-                <option value="Miami">Miami</option>
-                <option value="Seattle">Seattle</option>
-              </select>
-            </div>
-            <div class="col-lg-3 col-md-6 d-flex align-items-end">
-              <button class="btn search-btn w-100" onclick="searchCars()">
-                <i class="fas fa-search me-2"></i>Find My Car
-              </button>
-            </div>
-          </div>
-        </div>
+        <!-- Search Container -->
+<div class="search-container" data-aos="fade-up" data-aos-delay="200">
+  <div class="row g-3">
 
+    <!-- Brand -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">Car Brand</label>
+      <select class="form-select home-filter" name="brand">
+        <option value="">Select Brand</option>
+        <option value="Maruti Suzuki">Maruti Suzuki</option>
+        <option value="Hyundai">Hyundai</option>
+        <option value="Honda">Honda</option>
+        <option value="Tata">Tata</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Mahindra">Mahindra</option>
+        <option value="Skoda">Skoda</option>
+      </select>
+    </div>
+
+    <!-- Price -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">Price Range</label>
+      <select class="form-select home-filter" name="price">
+        <option value="">Select Price</option>
+        <option value="200000">Under 2 Lakh</option>
+        <option value="500000">2 - 5 Lakh</option>
+        <option value="800000">5 - 8 Lakh</option>
+        <option value="1000000">8 - 10 Lakh</option>
+        <option value="1000000+">10+ Lakh</option>
+      </select>
+    </div>
+
+    <!-- City -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">Location</label>
+      <select class="form-select home-filter" name="city">
+        <option value="">Select City</option>
+        <option value="Rajkot">Rajkot</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Pune">Pune</option>
+        <option value="Jaipur">Jaipur</option>
+        <option value="Indore">Indore</option>
+        <option value="Goa">Goa</option>
+        <option value="Lucknow">Lucknow</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Kolkata">Kolkata</option>
+      </select>
+    </div>
+
+    <!-- KM -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">KM Driven</label>
+      <select class="form-select home-filter" name="kms">
+        <option value="">Select KM</option>
+        <option value="10000">10,000 kms or less</option>
+        <option value="30000">30,000 kms or less</option>
+        <option value="50000">50,000 kms or less</option>
+        <option value="75000">75,000 kms or less</option>
+        <option value="100000">1,00,000 kms or less</option>
+        <option value="125000">1,25,000 kms or less</option>
+        <option value="150000">1,50,000 kms or less</option>
+        <option value="175000">1,75,000 kms or less</option>
+      </select>
+    </div>
+
+    <!-- Search Button -->
+    <div class="col-lg-3 col-md-6 d-flex align-items-end">
+      <button class="btn search-btn w-100" onclick="searchCars()">
+        <i class="fas fa-search me-2"></i>Find My Car
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+        
         <!-- Quick Action Buttons -->
         <div
           class="d-flex gap-3 flex-wrap"

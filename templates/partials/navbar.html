@@ -40,11 +40,7 @@
             <i class="fas fa-info-circle me-1"></i>About Us
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#contact">
-            <i class="fas fa-phone me-1"></i>Contact
-          </a>
-        </li>
+        
         {% if session.get("logged_in") %}
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle d-flex align-items-center"
@@ -54,20 +50,26 @@
        data-bs-toggle="dropdown"
        aria-expanded="false">
 
-        <i class="fas fa-user-circle me-2"></i>
-        {{ session.get("name") }}
+        <!-- Avatar Circle -->
+        <div class="avatar-circle me-2">
+            {{ session.get("name", "U")[0]|upper }}
+        </div>
 
     </a>
 
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+        <li class="px-3 py-2 text-center">
+            <strong>{{ session.get("name") }}</strong>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
 
         <li>
             <a class="dropdown-item" href="{{ url_for('seller_dashboard') }}">
                 <i class="fas fa-list me-2"></i>Seller Dashboard
             </a>
         </li>
-
-        <li><hr class="dropdown-divider"></li>
 
         <li>
             <a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
@@ -82,6 +84,7 @@
     <a class="nav-link" href="{{ url_for('login') }}">Login</a>
 </li>
 {% endif %}
+
       </ul>
     </div>
   </div>

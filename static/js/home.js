@@ -74,3 +74,25 @@ document.querySelectorAll(".feature-card").forEach((card) => {
     this.style.transform = "translateY(0) scale(1)";
   });
 });
+
+function searchCars() {
+
+    let params = new URLSearchParams();
+
+    document.querySelectorAll(".home-filter").forEach(el => {
+
+        if (el.value) {
+
+            // kms format for backend
+            if (el.name === "kms") {
+                params.append("kms", el.value + "B");
+            } else {
+                params.append(el.name, el.value);
+            }
+
+        }
+
+    });
+
+    window.location.href = "/buy?" + params.toString();
+}

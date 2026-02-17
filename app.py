@@ -3,11 +3,13 @@ from db import execute_query
 import os
 import uuid
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
+import re
 
 
 
 UPLOAD_FOLDER = "static/images/cars"    # path to store images
-ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "avif"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)   # creates folder if not exist
 # if exist then does nothing bcoz exist_ok=True
@@ -39,7 +41,7 @@ def login():
         password = request.form.get("password")
 
         user = execute_query("""
-            SELECT user_id, email, password, role FROM users
+            SELECT user_id, name, email, password, role FROM users
             WHERE email = %s
             """,
             (email,), fetch=True
@@ -51,12 +53,13 @@ def login():
 
         user = user[0]   # becoz execute_query(in db.py) returns list
 
-        if password != user["password"]:
+        if not check_password_hash(user["password"], password):
             flash("Incorrect password", "danger")
             return redirect(url_for("login"))
         
         session["logged_in"] = True
         session["user_id"] = user["user_id"]
+        session["name"] = user["name"]
         session["email"] = user["email"]
         session["role"] = user["role"]
 
@@ -78,11 +81,34 @@ def logout():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        name = request.form.get("name")
-        email = request.form.get("email")
-        phone = request.form.get("phone")
-        password = request.form.get("password")
-        confirmPassword = request.form.get("confirmPassword")
+
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
+        phone = request.form.get("phone", "").strip()
+        password = request.form.get("password", "")
+        hashed_password = generate_password_hash(password)
+        confirmPassword = request.form.get("confirmPassword", "")
+
+        if not name:
+            flash("Name required.", "danger")
+            return render_template("signup.html")
+
+        if not email.endswith("@gmail.com"):
+            flash("Email must end with @gmail.com", "danger")
+            return render_template("signup.html")
+
+        if not re.fullmatch(r"\d{10}", phone):
+            flash("Phone number must be exactly 10 digits.", "danger")
+            return render_template("signup.html")
+
+        password_pattern = r"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$"
+        if not re.fullmatch(password_pattern, password):
+            flash("Password must be 6-10 characters with 1 uppercase, 1 digit, and 1 special character.", "danger")
+            return render_template("signup.html")
+
+        if password != confirmPassword:
+            flash("Passwords do not match!", "danger")
+            return render_template("signup.html")
 
         existing = execute_query(
             "SELECT user_id FROM users WHERE email = %s",
@@ -92,33 +118,61 @@ def signup():
 
         if existing:
             flash("Email already registered. Please login.", "danger")
-            return render_template("login.html")
-
-        if password != confirmPassword:
-            flash("Passwords do not match!", "danger")
             return render_template("signup.html")
 
-        execute_query(
-            """
-            INSERT INTO users (name, email, phone, password, role)
-            VALUES (%s, %s, %s, %s, %s)
-            """,
-            (name, email, phone, password, "USER")
-        )
+        execute_query("""
+            INSERT INTO users (name, email, phone, password)
+            VALUES (%s, %s, %s, %s)
+        """, (name, email, phone, hashed_password))
 
         flash("Account created successfully! Please login.", "success")
-        return render_template("login.html")
+        return redirect(url_for("login"))
 
     return render_template("signup.html")
 
 
 
 # ============================== BUY ==============================
+# @app.route("/buy")
+# def buy():
+#     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
+#     cars = execute_query(query, fetch=True)
+#     return render_template("buy.html", cars=cars)
 @app.route("/buy")
 def buy():
+
+    filters = request.args.to_dict(flat=False)
+
+    conditions = []
+    params = []
+
+    if "brand" in filters:
+        conditions.append("brand=%s")
+        params.append(filters["brand"][0])
+
+    if "city" in filters:
+        conditions.append("city=%s")
+        params.append(filters["city"][0])
+
+    if "kms" in filters:
+        kms = filters["kms"][0].replace("B", "")
+        conditions.append("kms_driven <= %s")
+        params.append(kms)
+
+    if "price" in filters:
+        price = filters["price"][0].replace("+", "")
+        conditions.append("price <= %s")
+        params.append(price)
+
     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
-    cars = execute_query(query, fetch=True)
+
+    if conditions:
+        query += " AND " + " AND ".join(conditions)
+
+    cars = execute_query(query, params, fetch=True) or []
+
     return render_template("buy.html", cars=cars)
+
 
 @app.route("/buy_car/<int:car_id>", methods=["POST"])
 def buy_car(car_id):
@@ -141,13 +195,13 @@ def buy_car(car_id):
 # ============================== SELL ==============================
 @app.route("/sell")
 def sell():
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
     return render_template("sell.html")
 
 @app.route("/sell-car", methods=["POST"])
 def sell_car():
-    if not session.get("logged_in"):
-        return redirect(url_for("login"))
-
     try:
         user_id = session.get("user_id")
         brand = request.form.get("brand")
@@ -206,66 +260,267 @@ def seller_dashboard():
 
 
 # ============================== FILTERS ==============================
+# @app.route("/filter")
+# def filter_cars():
+#     filters = request.args.to_dict(flat=False)
+#     conditions = []
+#     params = []
+
+#     sort_by = filters.pop("sort", ["newest"])[0]
+
+#     for key, values in filters.items():
+#         val = values[0]
+
+#         if val == "All":
+#             continue
+
+#         if key == "price":
+#             if val == "30000A":
+#                 conditions.append("price >= 30000")
+#             elif val == "50000A":
+#                 conditions.append("price >= 50000")
+#             continue
+
+#         if key == "year":
+#             if val == "2024A":
+#                 conditions.append("year >= 2024")
+#             elif val == "2023A":
+#                 conditions.append("year >= 2023")
+#             elif val == "2022A":
+#                 conditions.append("year >= 2022")
+#             continue
+
+#         if key == "mileage":
+#             if val == "0-25000":
+#                 conditions.append("kms_driven BETWEEN 0 AND 25000")
+#             elif val == "25000-50000":
+#                 conditions.append("kms_driven BETWEEN 25000 AND 50000")
+#             elif val == "50000-75000":
+#                 conditions.append("kms_driven BETWEEN 50000 AND 75000")
+#             elif val == "75001+":
+#                 conditions.append("kms_driven >= 75001")
+#             continue
+
+#         if key == "city":
+#             conditions.append("city = %s")
+#             params.append(val)
+#             continue
+
+#         if key == "owners":
+#             conditions.append("owners = %s")
+#             params.append(val)
+#             continue
+
+#         conditions.append(f"{key} = %s")
+#         params.append(val)
+
+#     # Base query
+#     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
+
+#     if conditions:
+#         query += " AND " + " AND ".join(conditions)
+        
+#     sort_map = {
+#         "newest": "ORDER BY created_at DESC",
+#         "price-low": "ORDER BY price ASC",
+#         "price-high": "ORDER BY price DESC",
+#         "mileage-low": "ORDER BY kms_driven ASC",
+#         "year-new": "ORDER BY year DESC"
+#     }
+
+#     query += " " + sort_map.get(sort_by, "ORDER BY created_at DESC")
+
+#     cars = execute_query(query, params, fetch=True)
+
+#     if not cars:
+#         cars = []
+
+#     return render_template("car_cards.html", cars=cars)
+# @app.route("/filter")
+# def filter_cars():
+
+#     filters = request.args.to_dict(flat=False)
+
+#     conditions = []
+#     params = []
+
+#     sort_by = filters.pop("sort", ["newest"])[0]
+
+#     for key, values in filters.items():
+
+#         for val in values:
+
+#             if not val or val == "All":
+#                 continue
+
+#             # Brand
+#             if key == "brand":
+#                 conditions.append("brand = %s")
+#                 params.append(val)
+
+#             # Year
+#             elif key == "year":
+#                 year = val.replace("A", "")
+#                 conditions.append("year >= %s")
+#                 params.append(year)
+
+#             # KMs Driven
+#             elif key == "kms":
+#                 kms = val.replace("B", "")
+#                 conditions.append("kms_driven <= %s")
+#                 params.append(kms)
+
+#             # Fuel Type
+#             elif key == "fuel_type":
+#                 conditions.append("fuel_type = %s")
+#                 params.append(val)
+
+#             # Transmission
+#             elif key == "transmission":
+#                 conditions.append("transmission = %s")
+#                 params.append(val)
+
+#             # City
+#             elif key == "city":
+#                 conditions.append("city = %s")
+#                 params.append(val)
+
+#             # Owners
+#             elif key == "owners":
+#                 if val == "3":
+#                     conditions.append("owners >= 3")
+#                 else:
+#                     conditions.append("owners = %s")
+#                     params.append(val)
+
+#     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
+
+#     if conditions:
+#         query += " AND " + " AND ".join(conditions)
+
+#     sort_map = {
+#         "newest": "ORDER BY created_at DESC",
+#         "price-low": "ORDER BY price ASC",
+#         "price-high": "ORDER BY price DESC",
+#         "mileage-low": "ORDER BY kms_driven ASC",
+#         "year-new": "ORDER BY year DESC"
+#     }
+
+#     query += " " + sort_map.get(sort_by, "ORDER BY created_at DESC")
+
+#     cars = execute_query(query, params, fetch=True) or []
+
+#     return render_template("car_cards.html", cars=cars)
 @app.route("/filter")
 def filter_cars():
+
     filters = request.args.to_dict(flat=False)
+
     conditions = []
     params = []
 
+    # Sorting
     sort_by = filters.pop("sort", ["newest"])[0]
 
-    for key, values in filters.items():
-        val = values[0]
 
-        if val == "All":
-            continue
+    # -------------------------
+    # BRAND (single or multiple)
+    # -------------------------
+    if "brand" in filters:
+        brands = filters["brand"]
+        placeholders = ",".join(["%s"] * len(brands))
+        conditions.append(f"brand IN ({placeholders})")
+        params.extend(brands)
 
-        if key == "price":
-            if val == "30000A":
-                conditions.append("price >= 30000")
-            elif val == "50000A":
-                conditions.append("price >= 50000")
-            continue
 
-        if key == "year":
-            if val == "2024A":
-                conditions.append("year >= 2024")
-            elif val == "2023A":
-                conditions.append("year >= 2023")
-            elif val == "2022A":
-                conditions.append("year >= 2022")
-            continue
+    # -------------------------
+    # YEAR
+    # -------------------------
+    if "year" in filters:
+        years = []
+        for val in filters["year"]:
+            try:
+                years.append(int(val.replace("A", "")))
+            except:
+                pass
 
-        if key == "mileage":
-            if val == "0-25000":
-                conditions.append("kms_driven BETWEEN 0 AND 25000")
-            elif val == "25000-50000":
-                conditions.append("kms_driven BETWEEN 25000 AND 50000")
-            elif val == "50000-75000":
-                conditions.append("kms_driven BETWEEN 50000 AND 75000")
-            elif val == "75001+":
-                conditions.append("kms_driven >= 75001")
-            continue
+        if years:
+            conditions.append("year >= %s")
+            params.append(min(years))
 
-        if key == "city":
-            conditions.append("city = %s")
-            params.append(val)
-            continue
 
-        if key == "owners":
-            conditions.append("owners = %s")
-            params.append(val)
-            continue
+    # -------------------------
+    # KMS
+    # -------------------------
+    if "kms" in filters:
+        kms_vals = []
+        for val in filters["kms"]:
+            try:
+                kms_vals.append(int(val.replace("B", "")))
+            except:
+                pass
 
-        conditions.append(f"{key} = %s")
-        params.append(val)
+        if kms_vals:
+            conditions.append("kms_driven <= %s")
+            params.append(max(kms_vals))
 
-    # Base query
+
+    # -------------------------
+    # FUEL TYPE (multi select)
+    # -------------------------
+    if "fuel_type" in filters:
+        fuels = filters["fuel_type"]
+        placeholders = ",".join(["%s"] * len(fuels))
+        conditions.append(f"fuel_type IN ({placeholders})")
+        params.extend(fuels)
+
+
+    # -------------------------
+    # TRANSMISSION
+    # -------------------------
+    if "transmission" in filters:
+        trans = filters["transmission"]
+        placeholders = ",".join(["%s"] * len(trans))
+        conditions.append(f"transmission IN ({placeholders})")
+        params.extend(trans)
+
+
+    # -------------------------
+    # CITY
+    # -------------------------
+    if "city" in filters:
+        cities = filters["city"]
+        placeholders = ",".join(["%s"] * len(cities))
+        conditions.append(f"city IN ({placeholders})")
+        params.extend(cities)
+
+
+    # -------------------------
+    # OWNERS
+    # -------------------------
+    if "owners" in filters:
+        owners = filters["owners"]
+
+        if "3" in owners:
+            conditions.append("owners >= 3")
+        else:
+            placeholders = ",".join(["%s"] * len(owners))
+            conditions.append(f"owners IN ({placeholders})")
+            params.extend(owners)
+
+
+    # -------------------------
+    # BASE QUERY
+    # -------------------------
     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
 
     if conditions:
         query += " AND " + " AND ".join(conditions)
-        
+
+
+    # -------------------------
+    # SORTING
+    # -------------------------
     sort_map = {
         "newest": "ORDER BY created_at DESC",
         "price-low": "ORDER BY price ASC",
@@ -276,12 +531,11 @@ def filter_cars():
 
     query += " " + sort_map.get(sort_by, "ORDER BY created_at DESC")
 
-    cars = execute_query(query, params, fetch=True)
 
-    if not cars:
-        cars = []
+    cars = execute_query(query, params, fetch=True) or []
 
     return render_template("car_cards.html", cars=cars)
+
 
 # ============================== VIEW CAR DETAILS ==============================
 @app.route("/car/<int:car_id>")
@@ -567,6 +821,38 @@ def reject_request(request_id):
 
     flash("Car sell request rejected!", "warning")
     return redirect(url_for("admin"))
+
+# @app.route("/admin/car/<int:car_id>")
+# def admin_view_car(car_id):
+#     if not session.get("is_admin"):
+#         return redirect(url_for("login"))
+
+#     car = execute_query("""
+#         SELECT c.*, u.username
+#         FROM cars c
+#         JOIN users u ON c.user_id = u.user_id
+#         WHERE c.car_id = %s
+#     """, (car_id,), fetch=True)
+
+#     if not car:
+#         flash("Car not found", "danger")
+#         return redirect(url_for("admin_dashboard"))
+
+#     return render_template("admin_view_car.html", car=car[0])
+@app.route("/admin/request/<int:request_id>")
+def admin_view_request(request_id):
+    request = execute_query("""
+        SELECT sr.*, u.name
+        FROM sell_requests sr
+        JOIN users u ON sr.user_id = u.user_id
+        WHERE sr.request_id = %s
+    """, (request_id,), fetch=True)
+
+    if not request:
+        return "No data found"
+
+    return render_template("admin_view_request.html", request=request[0])
+
 
 if __name__=="__main__":
     app.run(debug=True)

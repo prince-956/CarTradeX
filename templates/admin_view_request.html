@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Sell request - Car{% endblock %}
+
+
+{% block css %}{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card shadow p-4">
+
+        <h3 class="mb-4">Sell Request Details</h3>
+
+        <div class="row">
+            <div class="col-md-5">
+                 
+                     <img src="{{ url_for('static', filename='images/' + request.image) }}"
+                            alt="Car Image"
+                            class="img-fluid rounded shadow">
+            </div>
+
+            <div class="col-md-7">
+                <h4>{{ request.brand }} {{ request.model }}</h4>
+                <p><strong>Seller:</strong> {{ request.name }}</p>
+                <p><strong>Price:</strong> ₹{{ request.price }}</p>
+                <p><strong>Fuel Type:</strong> {{ request.fuel_type }}</p>
+                <p><strong>Year:</strong> {{ request.year }}</p>
+                <p><strong>KMs Driven:</strong> {{ request.km_driven }}</p>
+                <p><strong>City:</strong> {{ request.city }}</p>
+
+                <div class="mt-4">
+                    <form action="{{ url_for('approve_request', request_id=request.request_id) }}" 
+                          method="POST" style="display:inline;">
+                        <button class="btn btn-success">
+                            Approve
+                        </button>
+                    </form>
+
+                    <form action="{{ url_for('reject_request', request_id=request.request_id) }}" 
+                          method="POST" style="display:inline;">
+                        <button class="btn btn-danger">
+                            Reject
+                        </button>
+                    </form>
+
+                    <a href="{{ url_for('admin') }}" 
+                       class="btn btn-secondary">
+                        Back
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js %}{% endblock %}

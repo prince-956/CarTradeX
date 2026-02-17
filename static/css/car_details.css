@@ -312,7 +312,6 @@
   }
 }
 
-/* ===== PREVENT CONTENT FROM COVERING FOOTER ===== */
 section, .container {
   position: relative;
   z-index: 1;
