@@ -7,7 +7,7 @@
   margin-bottom: 2rem;
 }
 
-.main-image {
+/* .main-image {
   height: 400px;
   width: 100%;
   object-fit: cover;
@@ -17,18 +17,37 @@
 
 .main-image:hover {
   transform: scale(1.02);
+} */
+.main-image {
+  height: 420px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  transition: transform 0.4s ease;
+}
+
+.main-image:hover {
+  transform: scale(1.03);
 }
 
 
 
 /* Car Info Card */
-.car-info-card {
+/* .car-info-card {
   background: white;
   border-radius: 20px;
   padding: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
+} */
+.car-info-card {
+  background: white;
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
 }
+
 
 .car-title {
   font-size: 2rem;
@@ -136,7 +155,7 @@
 
 /* Benefits Section */
 .benefits-section {
-  background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+  background: linear-gradient(135deg, var(--primary-color), #a071f0);
   color: white;
   border-radius: 20px;
   padding: 2rem;
@@ -325,4 +344,134 @@ main {
 
 footer {
   padding-bottom: 100px !important;
+}
+
+
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 15px;
+}
+
+.breadcrumb a {
+    text-decoration: none;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.breadcrumb a:hover {
+    color: #2563eb;
+}
+
+.breadcrumb-item.active {
+    color: #111827;
+    font-weight: 600;
+}
+
+/* ================= HEADER ================= */
+
+.car-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.car-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.car-meta {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.car-meta span {
+    background: #f1f5f9;
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+.car-header-right {
+    text-align: right;
+}
+
+.car-price-main {
+    font-size: 34px;
+    font-weight: 800;
+    color: #16a34a;
+}
+
+.emi-text {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+
+.footer-price {
+    font-size: 24px;
+    font-weight: 800;
+    color: #16a34a;
+}
+
+.action-buttons {
+    height: auto;
+    padding: 14px 0;
+}
+
+
+/* ================= FOOTER BAR PREMIUM ================= */
+
+.action-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  padding: 14px 0;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -5px 25px rgba(0,0,0,0.08);
+  z-index: 1000;
+}
+
+/* price box */
+
+.footer-price-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.footer-price {
+  font-size: 28px;
+  font-weight: 800;
+  color: #16a34a;
+  line-height: 1;
+}
+
+.footer-sub {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* buttons alignment */
+
+.action-buttons .row {
+  align-items: center;
+}
+
+.action-buttons .btn {
+  height: 48px;
+  padding: 0 20px;
+  font-weight: 600;
+  border-radius: 10px;
 }

@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/my_profile.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="profile-wrapper">
+
+    <!-- HERO PROFILE -->
+    <div class="profile-hero">
+        <div class="container">
+
+            <div class="profile-card">
+
+                <div class="profile-left">
+                    <div class="avatar">
+                        {{ user.name[0] }}
+                    </div>
+
+                    <div>
+                        <h2>{{ user.name }}</h2>
+                        <p>{{ user.email }}</p>
+                        <p>{{ user.phone }}</p>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+
+                    <div class="stat">
+                        <h3>{{ sell_listings|length }}</h3>
+                        <span>Cars Listed</span>
+                    </div>
+
+                    <div class="stat">
+                        <h3>{{ bought_cars|length }}</h3>
+                        <span>Cars Bought</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- DASHBOARD STATS -->
+    <div class="container mt-4">
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+                <div class="dash-card">
+                    <h4>{{ sell_listings|length }}</h4>
+                    <p>Total Listings</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="dash-card">
+                    <h4>{{ bought_cars|length }}</h4>
+                    <p>Cars Purchased</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="dash-card">
+                    <h4>
+                        {{ sell_listings | selectattr("status","equalto","PENDING") | list | length }}
+                    </h4>
+                    <p>Pending Requests</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="dash-card">
+                    <h4>
+                        {{ sell_listings | selectattr("status","equalto","REJECTED") | list | length }}
+                    </h4>
+                    <p>Rejected</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABS -->
+    <div class="container mt-5">
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('listings')">
+                My Listings
+            </button>
+
+            <button class="tab-btn" onclick="showTab('purchased')">
+                Purchased Cars
+            </button>
+
+            
+
+        </div>
+
+    </div>
+
+
+    <!-- MY LISTINGS -->
+    <div class="container tab-content active" id="listings">
+
+        {% for car in sell_listings %}
+        <div class="car-card">
+
+            <img src="{{ url_for('static', filename='images/' + car.image) }}">
+
+            <div class="car-info">
+
+                <h4>{{ car.brand }} {{ car.model }} ({{ car.year }})</h4>
+
+                <div class="price">
+                    ₹{{ "{:,}".format(car.price) }}
+                </div>
+
+                <span class="status status-{{ car.status|lower }}">
+                    {{ car.status }}
+                </span>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+
+    <!-- PURCHASED -->
+    <div class="container tab-content" id="purchased">
+
+        {% for car in bought_cars %}
+        <div class="car-card">
+
+            <img src="{{ url_for('static', filename='images/' + car.image) }}">
+
+            <div class="car-info">
+
+                <h4>{{ car.brand }} {{ car.model }} ({{ car.year }})</h4>
+
+                <div class="price">
+                    ₹{{ "{:,}".format(car.price) }}
+                </div>
+
+                <span class="status sold">Purchased</span>
+
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/my_profile.js') }}"></script>
+{% endblock %}

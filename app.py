@@ -31,6 +31,10 @@ def home():
         return redirect(url_for("admin"))
     return render_template("home.html")
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 
 
 # =========================== LOGIN / SIGNUP / LOGOUT ===========================
@@ -174,20 +178,46 @@ def buy():
     return render_template("buy.html", cars=cars)
 
 
+# @app.route("/buy_car/<int:car_id>", methods=["POST"])
+# def buy_car(car_id):
+#     if not session.get("logged_in"):
+#         return redirect(url_for("login"))
+
+#     print(" Buy route called for car:", car_id)
+
+#     query = """
+#     UPDATE cars 
+#     SET status = 'SOLD' 
+#     WHERE car_id = %s;
+#     """
+
+#     execute_query(query, (car_id,)) 
+
+#     print(" Car marked SOLD in DB:", car_id)
+#     return {"message": "success"}, 200
 @app.route("/buy_car/<int:car_id>", methods=["POST"])
 def buy_car(car_id):
-    print(" Buy route called for car:", car_id)
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
+    user_id = session.get("user_id")   # buyer id
+
+    print("Buy route called for car:", car_id, "Buyer:", user_id)
 
     query = """
     UPDATE cars 
-    SET status = 'SOLD' 
-    WHERE car_id = %s;
+    SET status = 'SOLD',
+        buyer_id = %s
+    WHERE car_id = %s
+    AND status != 'SOLD';
     """
 
-    execute_query(query, (car_id,)) 
+    execute_query(query, (user_id, car_id))
 
-    print(" Car marked SOLD in DB:", car_id)
+    print("Car marked SOLD in DB:", car_id)
+
     return {"message": "success"}, 200
+
 
 
 
@@ -214,6 +244,7 @@ def sell_car():
         owners_raw = request.form.get("owners")
         owners = 4 if owners_raw == "3+" else int(owners_raw)
         price = int(request.form.get("price"))
+        number_plate = request.form.get("number_plate")
         image = request.files.get("images")
         filename = secure_filename(image.filename)
         unique_name = f"{uuid.uuid4().hex}_{filename}"
@@ -222,10 +253,10 @@ def sell_car():
 
         execute_query("""
             INSERT INTO sell_requests
-            (user_id, brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            (user_id, brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image, number_plate)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """,
-            (user_id, brand, model, year, city, fuel_type, transmission, kms, owners, price, image_path)
+            (user_id, brand, model, year, city, fuel_type, transmission, kms, owners, price, image_path, number_plate)
         )
         return jsonify({"success": True})
     
@@ -233,184 +264,71 @@ def sell_car():
         print("SELL ERROR:", e)
         return jsonify({"success": False, "error": str(e)})
 
-@app.route("/seller-dashboard")
-def seller_dashboard():
+# @app.route("/seller-dashboard")
+# def seller_dashboard():
+#     if not session.get("logged_in"):
+#         return redirect(url_for("login"))
+
+#     user_id = session["user_id"]
+
+#     requests = execute_query("""
+#         SELECT * FROM sell_requests
+#         WHERE user_id = %s
+#         ORDER BY requested_at DESC
+#     """, (user_id,), fetch=True)
+
+#     total = len(requests)
+#     pending = len([r for r in requests if r["status"] == "PENDING"])
+#     approved = len([r for r in requests if r["status"] == "APPROVED"])
+#     rejected = len([r for r in requests if r["status"] == "REJECTED"])
+
+#     return render_template("seller_dashboard.html",
+#                            requests=requests,
+#                            total=total,
+#                            pending=pending,
+#                            approved=approved,
+#                            rejected=rejected)
+@app.route("/my-profile")
+def my_profile():
+
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
     user_id = session["user_id"]
 
-    requests = execute_query("""
-        SELECT * FROM sell_requests
+    user_data = execute_query("""
+        SELECT name, email, phone
+        FROM users
         WHERE user_id = %s
-        ORDER BY requested_at DESC
     """, (user_id,), fetch=True)
 
-    total = len(requests)
-    pending = len([r for r in requests if r["status"] == "PENDING"])
-    approved = len([r for r in requests if r["status"] == "APPROVED"])
-    rejected = len([r for r in requests if r["status"] == "REJECTED"])
+    user = user_data[0] if user_data else None
 
-    return render_template("seller_dashboard.html",
-                           requests=requests,
-                           total=total,
-                           pending=pending,
-                           approved=approved,
-                           rejected=rejected)
+    sell_listings = execute_query("""
+    SELECT *
+    FROM sell_requests
+    WHERE user_id = %s
+    ORDER BY requested_at DESC
+    """, (user_id,), fetch=True) or []
+
+    bought_cars = execute_query("""
+    SELECT *
+    FROM cars
+    WHERE buyer_id = %s
+    ORDER BY created_at DESC
+    """, (user_id,), fetch=True) or []
+
+
+    return render_template(
+        "my_profile.html",
+        user=user,
+        sell_listings=sell_listings,
+        bought_cars=bought_cars
+    )
+
 
 
 # ============================== FILTERS ==============================
-# @app.route("/filter")
-# def filter_cars():
-#     filters = request.args.to_dict(flat=False)
-#     conditions = []
-#     params = []
-
-#     sort_by = filters.pop("sort", ["newest"])[0]
-
-#     for key, values in filters.items():
-#         val = values[0]
-
-#         if val == "All":
-#             continue
-
-#         if key == "price":
-#             if val == "30000A":
-#                 conditions.append("price >= 30000")
-#             elif val == "50000A":
-#                 conditions.append("price >= 50000")
-#             continue
-
-#         if key == "year":
-#             if val == "2024A":
-#                 conditions.append("year >= 2024")
-#             elif val == "2023A":
-#                 conditions.append("year >= 2023")
-#             elif val == "2022A":
-#                 conditions.append("year >= 2022")
-#             continue
-
-#         if key == "mileage":
-#             if val == "0-25000":
-#                 conditions.append("kms_driven BETWEEN 0 AND 25000")
-#             elif val == "25000-50000":
-#                 conditions.append("kms_driven BETWEEN 25000 AND 50000")
-#             elif val == "50000-75000":
-#                 conditions.append("kms_driven BETWEEN 50000 AND 75000")
-#             elif val == "75001+":
-#                 conditions.append("kms_driven >= 75001")
-#             continue
-
-#         if key == "city":
-#             conditions.append("city = %s")
-#             params.append(val)
-#             continue
-
-#         if key == "owners":
-#             conditions.append("owners = %s")
-#             params.append(val)
-#             continue
-
-#         conditions.append(f"{key} = %s")
-#         params.append(val)
-
-#     # Base query
-#     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
-
-#     if conditions:
-#         query += " AND " + " AND ".join(conditions)
-        
-#     sort_map = {
-#         "newest": "ORDER BY created_at DESC",
-#         "price-low": "ORDER BY price ASC",
-#         "price-high": "ORDER BY price DESC",
-#         "mileage-low": "ORDER BY kms_driven ASC",
-#         "year-new": "ORDER BY year DESC"
-#     }
-
-#     query += " " + sort_map.get(sort_by, "ORDER BY created_at DESC")
-
-#     cars = execute_query(query, params, fetch=True)
-
-#     if not cars:
-#         cars = []
-
-#     return render_template("car_cards.html", cars=cars)
-# @app.route("/filter")
-# def filter_cars():
-
-#     filters = request.args.to_dict(flat=False)
-
-#     conditions = []
-#     params = []
-
-#     sort_by = filters.pop("sort", ["newest"])[0]
-
-#     for key, values in filters.items():
-
-#         for val in values:
-
-#             if not val or val == "All":
-#                 continue
-
-#             # Brand
-#             if key == "brand":
-#                 conditions.append("brand = %s")
-#                 params.append(val)
-
-#             # Year
-#             elif key == "year":
-#                 year = val.replace("A", "")
-#                 conditions.append("year >= %s")
-#                 params.append(year)
-
-#             # KMs Driven
-#             elif key == "kms":
-#                 kms = val.replace("B", "")
-#                 conditions.append("kms_driven <= %s")
-#                 params.append(kms)
-
-#             # Fuel Type
-#             elif key == "fuel_type":
-#                 conditions.append("fuel_type = %s")
-#                 params.append(val)
-
-#             # Transmission
-#             elif key == "transmission":
-#                 conditions.append("transmission = %s")
-#                 params.append(val)
-
-#             # City
-#             elif key == "city":
-#                 conditions.append("city = %s")
-#                 params.append(val)
-
-#             # Owners
-#             elif key == "owners":
-#                 if val == "3":
-#                     conditions.append("owners >= 3")
-#                 else:
-#                     conditions.append("owners = %s")
-#                     params.append(val)
-
-#     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
-
-#     if conditions:
-#         query += " AND " + " AND ".join(conditions)
-
-#     sort_map = {
-#         "newest": "ORDER BY created_at DESC",
-#         "price-low": "ORDER BY price ASC",
-#         "price-high": "ORDER BY price DESC",
-#         "mileage-low": "ORDER BY kms_driven ASC",
-#         "year-new": "ORDER BY year DESC"
-#     }
-
-#     query += " " + sort_map.get(sort_by, "ORDER BY created_at DESC")
-
-#     cars = execute_query(query, params, fetch=True) or []
-
-#     return render_template("car_cards.html", cars=cars)
 @app.route("/filter")
 def filter_cars():
 
@@ -552,7 +470,7 @@ def car_details(car_id):
         in_wishlist = bool(existing)
 
     cars = execute_query("""
-        SELECT car_id, brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image
+        SELECT car_id, brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image, number_plate
         FROM cars
         WHERE car_id = %s
         """,
@@ -598,6 +516,9 @@ def wishlist():
 
 @app.route("/api/wishlist")
 def wishlist_api():
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
     user_id = session.get("user_id")
 
     cars = execute_query("""
@@ -764,14 +685,45 @@ def get_pending_listings():
 
     return data if data else []
 
+# @app.route("/admin/approve/<int:request_id>", methods=["POST"])
+# def approve_request(request_id):
+#     if not session.get("logged_in") or session.get("role") != "ADMIN":
+#         flash("Unauthorized access!", "danger")
+#         return redirect(url_for("login"))
+
+#     request_data = execute_query("""
+#         SELECT brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image, number_plate
+#         FROM sell_requests
+#         WHERE request_id = %s
+#         """, 
+#         (request_id,), fetch=True
+#     )
+
+#     if not request_data:
+#         flash("Sell request not found!", "danger")
+#         return redirect(url_for("admin"))
+
+#     car = request_data[0]
+
+#     execute_query("""
+#         UPDATE sell_requests
+#         SET status = 'APPROVED'
+#         WHERE request_id = %s
+#         """,
+#         (request_id,)
+#     )
 @app.route("/admin/approve/<int:request_id>", methods=["POST"])
 def approve_request(request_id):
+
     if not session.get("logged_in") or session.get("role") != "ADMIN":
         flash("Unauthorized access!", "danger")
         return redirect(url_for("login"))
 
+    admin_id = session.get("user_id")   # logged in admin id
+
     request_data = execute_query("""
-        SELECT brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image
+        SELECT brand, model, year, city, fuel_type, transmission, 
+               kms_driven, owners, price, image, number_plate, user_id
         FROM sell_requests
         WHERE request_id = %s
         """, 
@@ -783,7 +735,9 @@ def approve_request(request_id):
         return redirect(url_for("admin"))
 
     car = request_data[0]
+    seller_id = car["user_id"]   # seller id from sell request
 
+    # Update request status
     execute_query("""
         UPDATE sell_requests
         SET status = 'APPROVED'
@@ -792,18 +746,37 @@ def approve_request(request_id):
         (request_id,)
     )
 
+    # Insert into cars table
     execute_query("""
         INSERT INTO cars
-        (brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image, status)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        (brand, model, year, city, fuel_type, transmission, kms_driven,
+         owners, price, image, status, number_plate, seller_id, approved_by)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """,
-        (car["brand"], car["model"], car["year"], car["city"], car["fuel_type"], car["transmission"],
-        car["kms_driven"], car["owners"], car["price"], car["image"], "AVAILABLE"
+        (
+            car["brand"], car["model"], car["year"], car["city"],
+            car["fuel_type"], car["transmission"], car["kms_driven"],
+            car["owners"], car["price"], car["image"],
+            "AVAILABLE", car["number_plate"],
+            seller_id, admin_id
         )
     )
 
     flash("Car approved & added to marketplace!", "success")
     return redirect(url_for("admin"))
+
+#     execute_query("""
+#         INSERT INTO cars
+#         (brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image, status, number_plate)
+#         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+#         """,
+#         (car["brand"], car["model"], car["year"], car["city"], car["fuel_type"], car["transmission"],
+#         car["kms_driven"], car["owners"], car["price"], car["image"], "AVAILABLE", car["number_plate"]
+#         )
+#     )
+
+#     flash("Car approved & added to marketplace!", "success")
+#     return redirect(url_for("admin"))
 
 @app.route("/admin/reject/<int:request_id>", methods=["POST"])
 def reject_request(request_id):
@@ -822,27 +795,10 @@ def reject_request(request_id):
     flash("Car sell request rejected!", "warning")
     return redirect(url_for("admin"))
 
-# @app.route("/admin/car/<int:car_id>")
-# def admin_view_car(car_id):
-#     if not session.get("is_admin"):
-#         return redirect(url_for("login"))
-
-#     car = execute_query("""
-#         SELECT c.*, u.username
-#         FROM cars c
-#         JOIN users u ON c.user_id = u.user_id
-#         WHERE c.car_id = %s
-#     """, (car_id,), fetch=True)
-
-#     if not car:
-#         flash("Car not found", "danger")
-#         return redirect(url_for("admin_dashboard"))
-
-#     return render_template("admin_view_car.html", car=car[0])
 @app.route("/admin/request/<int:request_id>")
 def admin_view_request(request_id):
     request = execute_query("""
-        SELECT sr.*, u.name
+        SELECT sr.*, u.name, u.phone
         FROM sell_requests sr
         JOIN users u ON sr.user_id = u.user_id
         WHERE sr.request_id = %s
@@ -853,49 +809,5 @@ def admin_view_request(request_id):
 
     return render_template("admin_view_request.html", request=request[0])
 
-
 if __name__=="__main__":
     app.run(debug=True)
-
-
-
-
-
-
-# @app.route("/filter")
-# def filter_cars():
-#     filters = request.args.to_dict(flat=False)
-#     conditions = []
-#     params = []
-#     for key, values in filters.items():
-#         if key == "price":
-#             if values[0] == "30000A":
-#                 conditions.append("price >= 30000")
-#             elif values[0] == "50000A":
-#                 conditions.append("price >= 50000")
-#             continue
-
-#         if key == "year":
-#             if values[0] == "2024A":
-#                 conditions.append("year >= 2024")
-#             elif values[0] == "2023A":
-#                 conditions.append("year >= 2023")
-#             elif values[0] == "2022A":
-#                 conditions.append("year >= 2022")
-#             continue
-
-#         placeholders = ",".join(["%s"] * len(values))
-#         conditions.append(f"{key} IN ({placeholders})")
-#         params.extend(values)
-
-#     query = "SELECT * FROM cars WHERE status='AVAILABLE'"
-
-#     if conditions:
-#         query += " AND " + " AND ".join(conditions)
-
-#     cars = execute_query(query, params, fetch=True)
-
-#     if not cars:
-#         cars = []
-
-#     return render_template("car_cards.html", cars=cars)

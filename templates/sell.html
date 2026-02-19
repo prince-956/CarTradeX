@@ -81,6 +81,8 @@
                 id="ownerName"
                 name="owner_name"
                 placeholder="Enter your full name"
+                pattern="[A-Za-z]"
+                title="Only letters allowed"
                 required
               />
             </div>
@@ -92,6 +94,8 @@
                 id="mobileNumber"
                 name="mobile"
                 placeholder="Enter 10-digit mobile number"
+                pattern="[0-9]{10}"
+                maxlength="10"
                 required
               />
             </div>
@@ -99,14 +103,19 @@
               <label class="form-label">City *</label>
               <select class="form-select" id="city" name="city" required>
                 <option value="">Select your city</option>
-                <option value="mumbai">Mumbai</option>
-                <option value="delhi">Delhi</option>
-                <option value="bangalore">Bangalore</option>
-                <option value="chennai">Chennai</option>
-                <option value="pune">Pune</option>
-                <option value="hyderabad">Hyderabad</option>
-                <option value="kolkata">Kolkata</option>
-                <option value="ahmedabad">Ahmedabad</option>
+                <option value="Rajkot">Rajkot</option>
+                <option value="Ahmedabad">Ahmedabad</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Pune">Pune</option>
+                <option value="Jaipur">Jaipur</option>
+                <option value="Indore">Indore</option>
+                <option value="Goa">Goa</option>
+                <option value="Lucknow">Lucknow</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Kolkata">Kolkata</option>
               </select>
             </div>
             <button
@@ -129,14 +138,16 @@
                   <label class="form-label">Car Brand *</label>
                   <select class="form-select" id="carBrand" name="brand" required>
                     <option value="">Select brand</option>
-                    <option value="maruti">Maruti Suzuki</option>
-                    <option value="hyundai">Hyundai</option>
-                    <option value="honda">Honda</option>
-                    <option value="toyota">Toyota</option>
-                    <option value="tata">Tata</option>
-                    <option value="mahindra">Mahindra</option>
-                    <option value="ford">Ford</option>
-                    <option value="volkswagen">Volkswagen</option>
+                    <option value="Maruti Suzuki">Maruti Suzuki</option>
+                    <option value="Hyundai">Hyundai</option>
+                    <option value="Honda">Honda</option>
+                    <option value="Tata">Tata</option>
+                    <option value="Toyota">Toyota</option>
+                    <option value="Mahindra">Mahindra</option>
+                    <option value="Skoda">Skoda</option>
+                    <option value="Kia">Kia</option>
+                    <option value="Volkswagen">Volkswagen</option>
+                    <option value="Renault">Renault</option>
                   </select>
                 </div>
               </div>
@@ -145,11 +156,26 @@
                   <label class="form-label">Car Model *</label>
                   <select class="form-select" id="carModel" name="model" required>
                     <option value="">Select model</option>
-                    <option value="swift">Swift</option>
-                    <option value="baleno">Baleno</option>
-                    <option value="i20">i20</option>
-                    <option value="creta">Creta</option>
-                    <option value="city">City</option>
+                    <option value="Swift VXI">Swift VXI</option>
+                    <option value="Baleno Alpha">Baleno Alpha</option>
+                    <option value="i20 Sportz">i20 Sportz</option>
+                    <option value="Creta SX">Creta SX</option>
+                    <option value="City VX">City VX</option>
+                    <option value="Amaze S">Amaze S</option>
+                    <option value="Nexon XM">Nexon XM</option>
+                    <option value="Harrier XZ">Harrier XZ</option>
+                    <option value="Innova Crysta">Innova Crysta</option>
+                    <option value="Fortuner">Fortuner</option>
+                    <option value="XUV700 AX5">XUV700 AX5</option>
+                    <option value="Thar LX">Thar LX</option>
+                    <option value="Slavia Style">Slavia Style</option>
+                    <option value="Kushaq">Kushaq</option>
+                    <option value="Seltos HTX">Seltos HTX</option>
+                    <option value="Sonet GTX">Sonet GTX</option>
+                    <option value="Polo GT">Polo GT</option>
+                    <option value="Virtus">Virtus</option>
+                    <option value="Kiger RXZ">Kiger RXZ</option>
+                    <option value="Triber">Triber</option>
                   </select>
                 </div>
               </div>
@@ -160,6 +186,8 @@
                   <label class="form-label">Registration Year *</label>
                   <select class="form-select" id="regYear" name="year" required>
                     <option value="">Select year</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>
                     <option value="2022">2022</option>
@@ -168,6 +196,13 @@
                     <option value="2019">2019</option>
                     <option value="2018">2018</option>
                     <option value="2017">2017</option>
+                    <option value="2016">2016</option>
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
+                    <option value="2013">2013</option>
+                    <option value="2012">2012</option>
+                    <option value="2011">2011</option>
+                    <option value="2010">2010</option>
                   </select>
                 </div>
               </div>
@@ -176,9 +211,9 @@
                   <label class="form-label">Fuel Type *</label>
                   <select class="form-select" id="fuelType" name="fuel_type" required>
                     <option value="">Select fuel type</option>
-                    <option value="PETROL">PETROL</option>
-                    <option value="DIESEL">DIESEL</option>
-                    <option value="ELECTRIC">ELECTRIC</option>
+                    <option value="PETROL">Petrol</option>
+                    <option value="DIESEL">Diesel</option>
+                    <option value="ELECTRIC">Electric</option>
                   </select>
                 </div>
               </div>
@@ -187,8 +222,8 @@
                   <label class="form-label">Transmission *</label>
                   <select class="form-select" id="transmission" name="transmission" required>
                     <option value="">Select transmission</option>
-                    <option value="MANUAL">MANUAL</option>
-                    <option value="AUTOMATIC">AUTOMATIC</option>
+                    <option value="MANUAL">Manual</option>
+                    <option value="AUTOMATIC">Automatic</option>
                   </select>
                 </div>
               </div>
@@ -215,7 +250,7 @@
         <!-- Step 3: Vehicle Condition & Price -->
         <div class="step-content" id="step3" style="display: none">
           <h4 class="mb-4">Vehicle Condition & Price</h4>
-          <form id="finalDetailsForm" enctype="multipart/form-data">
+          <form id="finalDetailsForm" action="/sell-car" method="POST" enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
@@ -226,6 +261,8 @@
                     id="kmsDriven"
                     name="kms"
                     placeholder="e.g., 45000"
+                    min="0"
+                    max="500000"
                     required
                   />
                 </div>
@@ -244,7 +281,28 @@
               </div>
             </div>
             <div class="form-group">
+  <label class="form-label">Car Number Plate *</label>
+  <input
+    type="text"
+    class="form-control"
+    name="number_plate"
+    placeholder="e.g. GJ03CM1234"
+    pattern="[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}"
+    style="text-transform:uppercase"
+    required
+  />
+</div>
+
+            <div class="form-group">
               <label class="form-label">Expected Selling Price *</label>
+              
+<div id="priceSuggestion"
+     style="display:none; font-weight:600; color:#0d6efd; margin-bottom:8px;">
+    Suggested Market Price: ₹<span id="estimatedPrice">0</span>
+    (₹<span id="priceMin">0</span> – ₹<span id="priceMax">0</span>)
+</div>
+
+              
               <div class="input-group">
                 <span class="input-group-text">₹</span>
                 <input
@@ -253,6 +311,8 @@
                   id="expectedPrice"
                   name="price"
                   placeholder="Enter expected price"
+                  min="100000"
+                  step="1000"
                   required
                 />
               </div>
@@ -272,8 +332,8 @@
                   type="file"
                   id="carImages"
                   name="images"
-                  multiple
                   accept="image/*"
+                  required
                   style="display: none"
                 />
               </div>
@@ -289,8 +349,8 @@
               </button>
               <button
                 type="button"
-                class="btn btn-primary-custom flex-fill"
                 onclick="submitForm()"
+                class="btn btn-primary-custom flex-fill"
               >
                 <i class="fas fa-check me-2"></i>Submit for Selling
               </button>

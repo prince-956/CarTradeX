@@ -37,13 +37,30 @@
 
                 <!-- Car Overview -->
                 <div class="car-info-card slide-up">
-                    <h1 class="car-title">
-                        {{ car.year }} {{ car.brand }} {{ car.model }}
-                    </h1>
+                    <div class="car-header">
+    <div class="car-header-left">
+        <h1 class="car-title">
+            {{ car.year }} {{ car.brand }} {{ car.model }}
+        </h1>
 
-                    <div class="car-price">
-                        ₹{{ "{:,}".format(car.price) }} 
-                    </div>
+        <div class="car-meta">
+            <span><i class="fas fa-map-marker-alt"></i> {{ car.city }}</span>
+            <span>{{ car.kms_driven }} km</span>
+            <span>{{ car.fuel_type }}</span>
+            <span>{{ car.transmission }}</span>
+        </div>
+    </div>
+
+    <div class="car-header-right">
+        <div class="price">
+₹{{ "%.2f"|format(car.price/100000) }} Lakh
+</div>
+        <div class="emi-text">
+            EMI starts at ₹{{ (car.price / 60)|int | string | replace(',', '') }}
+        </div>
+    </div>
+</div>
+
 
 
                     <!-- Car Specifications -->
@@ -319,28 +336,31 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <div class="car-price mb-2 mb-md-0" style="font-size: 1.5rem;" id="footerPrice">
-                        <div class="car-price">
-                        ₹{{ "{:,}".format(car.price) }} 
-                    </div>
+                    <div class="footer-price-box">
+    <div class="footer-price">
+        ₹{{ "{:,}".format(car.price) }}
+    </div>
+    <div class="footer-sub">
+        EMI starts from ₹{{ (car.price / 60)|int }}
+    </div>
+</div>
 
-                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="d-flex gap-2 justify-content-end">
                         <form method="POST" action="{{ url_for('toggle_wishlist', car_id=car.car_id) }}">
 
                             {% if in_wishlist %}
-                                <button type="submit" class="btn btn-outline-custom" style="margin-bottom: 50px;">
+                                <button type="submit" class="btn btn-outline-custom">
                                     <i class="fas fa-heart me-2"></i>Saved (Remove)
                                 </button>
                             {% else %}
-                                <button type="submit" class="btn btn-outline-custom" style="margin-bottom: 50px;">
+                                <button type="submit" class="btn btn-outline-custom">
                                     <i class="far fa-heart me-2"></i>Save
                                 </button>
                             {% endif %}
                         </form>
-<button class="btn btn-primary" id="buyBtn" data-id="{{ car.car_id }}" style="margin-bottom: 50px;">
+<button class="btn btn-primary" id="buyBtn" data-id="{{ car.car_id }}">
    Buy Now
 </button>
 
