@@ -52,13 +52,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   buyBtn.addEventListener("click", function () {
     const carId = this.dataset.id;
-    console.log("Sending request for car:", carId);
+    console.log("Redirecting to payment for car:", carId);
 
     fetch(`/buy_car/${carId}`, { method: "POST" })
       .then(res => res.json())
       .then(data => {
         console.log("Server response:", data);
-        window.location.href = "/buy"; // refresh listing
+        if (data.success && data.redirect) {
+          window.location.href = data.redirect;
+        } else if (data.redirect) {
+          window.location.href = data.redirect;
+        } else {
+          alert(data.message || "Unable to proceed");
+        }
       })
       .catch(err => console.error(err));
   });

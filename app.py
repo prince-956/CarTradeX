@@ -198,25 +198,19 @@ def buy():
 @app.route("/buy_car/<int:car_id>", methods=["POST"])
 def buy_car(car_id):
     if not session.get("logged_in"):
-        return redirect(url_for("login"))
+        return jsonify({"success": False, "redirect": url_for("login")}), 401
 
-    user_id = session.get("user_id")   # buyer id
+    # Check if car is available
+    car = execute_query(
+        "SELECT status FROM cars WHERE car_id = %s",
+        (car_id,), fetch=True
+    )
+    
+    if not car or car[0]["status"] != "AVAILABLE":
+        return jsonify({"success": False, "message": "Car not available"}), 400
 
-    print("Buy route called for car:", car_id, "Buyer:", user_id)
-
-    query = """
-    UPDATE cars 
-    SET status = 'SOLD',
-        buyer_id = %s
-    WHERE car_id = %s
-    AND status != 'SOLD';
-    """
-
-    execute_query(query, (user_id, car_id))
-
-    print("Car marked SOLD in DB:", car_id)
-
-    return {"message": "success"}, 200
+    # Redirect to payment page
+    return jsonify({"success": True, "redirect": url_for("buyer_payment_page", car_id=car_id)}), 200
 
 
 
@@ -714,16 +708,12 @@ def get_pending_listings():
 #     )
 @app.route("/admin/approve/<int:request_id>", methods=["POST"])
 def approve_request(request_id):
-
     if not session.get("logged_in") or session.get("role") != "ADMIN":
         flash("Unauthorized access!", "danger")
         return redirect(url_for("login"))
 
-    admin_id = session.get("user_id")   # logged in admin id
-
     request_data = execute_query("""
-        SELECT brand, model, year, city, fuel_type, transmission, 
-               kms_driven, owners, price, image, number_plate, user_id
+        SELECT brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image, number_plate
         FROM sell_requests
         WHERE request_id = %s
         """, 
@@ -735,9 +725,7 @@ def approve_request(request_id):
         return redirect(url_for("admin"))
 
     car = request_data[0]
-    seller_id = car["user_id"]   # seller id from sell request
 
-    # Update request status
     execute_query("""
         UPDATE sell_requests
         SET status = 'APPROVED'
@@ -746,19 +734,13 @@ def approve_request(request_id):
         (request_id,)
     )
 
-    # Insert into cars table
     execute_query("""
         INSERT INTO cars
-        (brand, model, year, city, fuel_type, transmission, kms_driven,
-         owners, price, image, status, number_plate, seller_id, approved_by)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        (brand, model, year, city, fuel_type, transmission, kms_driven, owners, price, image, status, number_plate)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
         """,
-        (
-            car["brand"], car["model"], car["year"], car["city"],
-            car["fuel_type"], car["transmission"], car["kms_driven"],
-            car["owners"], car["price"], car["image"],
-            "AVAILABLE", car["number_plate"],
-            seller_id, admin_id
+        (car["brand"], car["model"], car["year"], car["city"], car["fuel_type"], car["transmission"],
+        car["kms_driven"], car["owners"], car["price"], car["image"], "AVAILABLE", car["number_plate"]
         )
     )
 
@@ -808,6 +790,207 @@ def admin_view_request(request_id):
         return "No data found"
 
     return render_template("admin_view_request.html", request=request[0])
+
+
+
+# ============================== TRANSACTION SYSTEM ==============================
+
+# SELLER TRANSACTION (Admin pays seller)
+@app.route("/transaction/seller/<int:request_id>")
+def seller_transaction_page(request_id):
+    if not session.get("logged_in") or session.get("role") != "ADMIN":
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+
+    # Get sell request + seller details
+    data = execute_query("""
+        SELECT sr.*, u.name, u.phone
+        FROM sell_requests sr
+        JOIN users u ON sr.user_id = u.user_id
+        WHERE sr.request_id = %s
+    """, (request_id,), fetch=True)
+
+    if not data:
+        flash("Request not found!", "danger")
+        return redirect(url_for("admin"))
+
+    return render_template("transaction.html", data=data[0])
+
+
+@app.route("/process_transaction/<int:request_id>", methods=["POST"])
+def process_transaction(request_id):
+    if not session.get("logged_in") or session.get("role") != "ADMIN":
+        flash("Unauthorized!", "danger")
+        return redirect(url_for("login"))
+
+    admin_id = session.get("user_id")
+    amount = request.form.get("amount")
+    sender_account = request.form.get("sender_account")
+    receiver_account = request.form.get("receiver_account")
+
+    # Get sell request data
+    req_data = execute_query("""
+        SELECT user_id, brand, model, year, city, fuel_type, transmission,
+               kms_driven, owners, price, image, number_plate, status
+        FROM sell_requests
+        WHERE request_id = %s
+    """, (request_id,), fetch=True)
+
+    if not req_data:
+        flash("Request not found!", "danger")
+        return redirect(url_for("admin"))
+
+    req = req_data[0]
+
+    # Prevent duplicate approval
+    if req["status"] == "APPROVED":
+        flash("Already approved!", "warning")
+        return redirect(url_for("admin"))
+
+    seller_id = req["user_id"]
+    owners = req.get("owners") or 1
+
+
+    # Step 1: Insert car into cars table and get car_id
+    car_result = execute_query("""
+        INSERT INTO cars
+        (brand, model, year, city, fuel_type, transmission, kms_driven,
+         owners, price, image, status, number_plate, seller_id, approved_by)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'AVAILABLE',%s,%s,%s)
+        RETURNING car_id
+    """, (
+        req["brand"], req["model"], req["year"], req["city"],
+        req["fuel_type"], req["transmission"], req["kms_driven"],
+        owners, req["price"], req["image"],
+        req["number_plate"], seller_id, admin_id
+    ), fetch=True)
+
+    if not car_result:
+        flash("Failed to add car!", "danger")
+        return redirect(url_for("admin"))
+
+    car_id = car_result[0]["car_id"]
+
+    # Step 2: Insert transaction (Admin pays seller)
+    execute_query("""
+        INSERT INTO transactions
+        (buyer_id, seller_id, car_id, amount, txn_type, status,
+         buyer_account, seller_account, approved_by, remarks, request_id)
+        VALUES (%s,%s,%s,%s,'SELL','COMPLETED',%s,%s,%s,%s,%s)
+    """, (
+        admin_id, seller_id, car_id, amount,
+        sender_account, receiver_account, admin_id,
+        "Seller payment for car approval", request_id
+    ))
+
+    # Step 3: Update sell_requests status to PAID
+    execute_query("""
+        UPDATE sell_requests
+        SET status = 'PAID'
+        WHERE request_id = %s
+    """, (request_id,))
+
+    flash("Seller paid! Now you can approve the car.", "success")
+    return redirect(url_for("admin"))
+
+
+# BUYER TRANSACTION (User buys car)
+@app.route("/buy/payment/<int:car_id>")
+def buyer_payment_page(car_id):
+    if not session.get("logged_in"):
+        flash("Please login first!", "warning")
+        return redirect(url_for("login"))
+
+    # Get car details
+    car = execute_query("""
+        SELECT car_id, brand, model, year, price, status, seller_id, approved_by
+        FROM cars
+        WHERE car_id = %s
+    """, (car_id,), fetch=True)
+
+    if not car:
+        flash("Car not found!", "danger")
+        return redirect(url_for("buy"))
+
+    if car[0]["status"] != "AVAILABLE":
+        flash("Car is not available!", "warning")
+        return redirect(url_for("buy"))
+
+    return render_template("buyer_payment.html", car=car[0])
+
+
+@app.route("/process_buy_transaction/<int:car_id>", methods=["POST"])
+def process_buy_transaction(car_id):
+    if not session.get("logged_in"):
+        flash("Unauthorized!", "danger")
+        return redirect(url_for("login"))
+
+    buyer_id = session.get("user_id")
+    buyer_account = request.form.get("buyer_account")
+    amount = request.form.get("amount")
+
+    # Get car details
+    car = execute_query("""
+        SELECT seller_id, approved_by, status, price
+        FROM cars
+        WHERE car_id = %s
+    """, (car_id,), fetch=True)
+
+    if not car:
+        flash("Car not found!", "danger")
+        return redirect(url_for("buy"))
+
+    car_data = car[0]
+
+    # Prevent buying already sold car
+    if car_data["status"] == "SOLD":
+        flash("Car already sold!", "warning")
+        return redirect(url_for("buy"))
+
+    seller_id = car_data["seller_id"]
+    approved_by = car_data["approved_by"]
+
+    # Get admin account (hardcoded or from admin user)
+    admin_account = "ADMIN-ACC-001"
+
+    # Step 1: Insert transaction (User pays admin)
+    execute_query("""
+        INSERT INTO transactions
+        (buyer_id, seller_id, car_id, amount, txn_type, status,
+         buyer_account, seller_account, approved_by, remarks)
+        VALUES (%s,%s,%s,%s,'BUY','COMPLETED',%s,%s,%s,%s)
+    """, (
+        buyer_id, seller_id, car_id, amount,
+        buyer_account, admin_account, approved_by,
+        "Car purchase payment"
+    ))
+
+    # Step 2: Update car status to SOLD
+    execute_query("""
+        UPDATE cars
+        SET status = 'SOLD',
+            buyer_id = %s
+        WHERE car_id = %s
+    """, (buyer_id, car_id))
+
+    # Step 3: Pay seller automatically
+    execute_query("""
+        INSERT INTO transactions
+        (buyer_id, seller_id, car_id, amount, txn_type, status,
+         buyer_account, seller_account, approved_by, remarks)
+        VALUES (%s,%s,%s,%s,'SELLER_PAYMENT','COMPLETED',%s,%s,%s,%s)
+    """, (
+        approved_by, seller_id, car_id, amount,
+        admin_account, f"SELLER-ACC-{seller_id}", approved_by,
+        "Automatic seller payment after car sale"
+    ))
+
+    flash("Payment successful! Car is now yours.", "success")
+    return redirect(url_for("my_profile"))
+
+# if __name__=="__main__":
+#     app.run(debug=True)
+#     return redirect(url_for("my_profile"))
 
 if __name__=="__main__":
     app.run(debug=True)

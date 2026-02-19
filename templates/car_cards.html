@@ -17,24 +17,28 @@
         <p class="car-subtitle">{{ car.transmission|upper }} {{ car.fuel_type|upper }}</p>
 
         <div class="car-specs">
-          <span>{{ car.kms_driven }} km</span>
-          <span>{{ car.fuel_type|upper }}</span>
-          <span>{{ car.transmission|upper }}</span>
-        </div>
 
-        {% if car.owners %}
+  <span>{{ car.kms_driven }} km</span>
+  <span>{{ car.fuel_type|upper }}</span>
+  <span>{{ car.transmission|upper }}</span>
+
+</div>
+
         <div class="owner-badge">
-          {% if car.owners == 1 %}
-            1st Owner
-          {% elif car.owners == 2 %}
-            2nd Owner
-          {% elif car.owners == 3 %}
-            3rd Owner
-          {% else %}
-            {{ car.owners }} th Owner
-          {% endif %}
-        </div>
-        {% endif %}
+
+  {% set owner = car.owners if car.owners else 1 %}
+
+  {% if owner == 1 %}
+    1st Owner
+  {% elif owner == 2 %}
+    2nd Owner
+  {% elif owner == 3 %}
+    3rd Owner
+  {% else %}
+    {{ owner }}th Owner
+  {% endif %}
+
+</div>
 
         <p class="car-location">
           <i class="fas fa-map-marker-alt"></i> {{ car.city }}

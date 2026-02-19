@@ -413,32 +413,35 @@ body {
 
 .car-specs {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    font-size: 13px;
-    color: #374151;
+    gap: 8px;
+    flex-wrap: nowrap;     /* prevent breaking line */
+    overflow: hidden;      /* avoid stretching */
     margin-bottom: 10px;
 }
 
 .car-specs span {
     background: #f1f5f9;
-    padding: 4px 10px;
+    padding: 5px 10px;
     border-radius: 8px;
     font-weight: 500;
+    font-size: 12px;
+    white-space: nowrap;   /* keep text in one line */
 }
 
 
 /* ================= OWNER BADGE ================= */
 
 .owner-badge {
-    display: inline-block;
+    display: block;
+    width: 100%;
     background: #eef2ff;
     color: #4f46e5;
     font-size: 12px;
     font-weight: 600;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 8px;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 
@@ -462,8 +465,9 @@ body {
     font-size: 22px;
     font-weight: 800;
     color: #0ea5e9;
-    /* margin-top: auto; */
+    margin-top: auto;
 }
+
 
 
 /* ================= RESPONSIVE ================= */

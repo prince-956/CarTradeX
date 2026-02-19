@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Seller Payment | CarTradeX{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block body %}
+
+<section class="py-5" style="background: #f5f7fb; min-height: 80vh;">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-body p-4">
+
+                        <h3 class="text-center mb-4 fw-bold">
+                            <i class="bi bi-credit-card-2-front-fill text-primary"></i>
+                            Seller Payment Transaction
+                        </h3>
+
+                        <!-- Car Details -->
+                        <div class="alert alert-info mb-4">
+                            <h5 class="mb-2">{{ data.brand }} {{ data.model }} ({{ data.year }})</h5>
+                            <p class="mb-1">Seller: <strong>{{ data.name }}</strong></p>
+                            <p class="mb-0">Price: <strong>₹{{ "{:,}".format(data.price) }}</strong></p>
+                        </div>
+
+                        <form method="POST"
+                              action="{{ url_for('process_transaction', request_id=data.request_id) }}">
+
+                            <!-- Admin Account (Sender) -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    CarTradeX Account (From)
+                                </label>
+                                <input type="text"
+                                       class="form-control form-control-lg"
+                                       name="sender_account"
+                                       value="ADMIN-ACC-001"
+                                       readonly>
+                            </div>
+
+                            <!-- Seller Account (Receiver) -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    Seller Account Number (To)
+                                </label>
+                                <input type="text"
+                                       class="form-control form-control-lg"
+                                       name="receiver_account"
+                                       value="SELLER-ACC-{{ data.user_id }}"
+                                       readonly>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">
+                                    Payment Amount (₹)
+                                </label>
+                                <input type="number"
+                                       class="form-control form-control-lg"
+                                       name="amount"
+                                       value="{{ data.price }}"
+                                       required>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit"
+                                        class="btn btn-success btn-lg rounded-3">
+                                    <i class="bi bi-check-circle"></i>
+                                    Pay Seller & Approve Car
+                                </button>
+                                
+                                <a href="{{ url_for('admin') }}" 
+                                   class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i>
+                                    Back to Admin Panel
+                                </a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="text-center mt-3 text-muted small">
+                    🔒 Secure admin transaction system
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
