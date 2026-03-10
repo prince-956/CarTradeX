@@ -1,0 +1,59 @@
+{% if cars %}
+{% for car in cars %}
+<div class="col-lg-4 col-md-6 mb-4">
+
+  <div class="card car-card h-100"
+       onclick="window.location.href='{{ url_for('car_details', car_id=car.car_id) }}'"
+       style="cursor:pointer;">
+
+      <div class="position-relative">
+        <img src="{{ url_for('static', filename='images/' ~ car.image) }}"
+             alt="{{ car.brand }}"
+             class="car-image">
+      </div>
+
+      <div class="car-info">
+        <h5 class="car-title">{{ car.year }} {{ car.brand }} {{ car.model }}</h5>
+        <p class="car-subtitle">{{ car.transmission|upper }} {{ car.fuel_type|upper }}</p>
+
+        <div class="car-specs">
+
+  <span>{{ car.kms_driven }} km</span>
+  <span>{{ car.fuel_type|upper }}</span>
+  <span>{{ car.transmission|upper }}</span>
+
+</div>
+
+        <div class="owner-badge">
+
+  {% set owner = car.owners if car.owners else 1 %}
+
+  {% if owner == 1 %}
+    1st Owner
+  {% elif owner == 2 %}
+    2nd Owner
+  {% elif owner == 3 %}
+    3rd Owner
+  {% else %}
+    {{ owner }}th Owner
+  {% endif %}
+
+</div>
+
+        <p class="car-location">
+          <i class="fas fa-map-marker-alt"></i> {{ car.city }}
+        </p>
+
+        <div class="price">
+₹{{ "%.2f"|format(car.price/100000) }} Lakh
+</div>
+
+      </div>
+
+  </div>
+
+</div>
+{% endfor %}
+{% else %}
+<p class="text-center text-muted">No cars available for sale.</p>
+{% endif %}

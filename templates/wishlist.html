@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}My Wishlist - CarTradeX{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/wishlist.css')}}">
+{% endblock %}
+
+{% block body %}
+<main>
+<div class="container my-4">
+    <!-- <h2>My Wishlist</h2> -->
+
+    {% if cars and cars|length > 0 %}
+    <div class="row">
+        {% for car in cars %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ url_for('static', filename='images/' + car.image) }}"
+                     class="card-img-top"
+                     alt="Car Image"
+                     style="height: 200px; object-fit: cover;">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                    <p class="card-text">
+                        Year: {{ car.year }} <br>
+                        City: {{ car.city }} <br>
+                        Price: ₹{{ car.price }}
+                    </p>
+
+                    <a href="{{ url_for('car_details', car_id=car.car_id) }}" 
+                       class="btn btn-primary">View Details</a>
+
+                    <form method="POST"
+                          action="{{ url_for('remove_from_wishlist', car_id=car.car_id) }}"
+                          style="display:inline;">
+                        <button class="btn btn-danger">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="text-center my-5">
+        <h3>Your wishlist is empty</h3>
+        <a href="{{ url_for('buy') }}" class="btn btn-primary">Browse Cars</a>
+    </div>
+    {% endif %}
+</div>
+</main>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/wishlist.js')}}"></script>
+{% endblock %}

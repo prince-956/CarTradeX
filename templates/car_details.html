@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block title %}View Car Details - CarTradeX{% endblock %} 
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/car_details.css')}}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('buy') }}">Buy Cars</a></li>
+                <li class="breadcrumb-item active" aria-current="page" id="carBreadcrumb">Car Details</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="container my-4">
+        <div class="row">
+            <!-- Car Images -->
+            <div class="col-lg-8">
+                <div class="car-gallery fade-in">
+                    {% if car.image %}
+                        <img src="{{ url_for('static', filename='images/' + car.image) }}"
+                            alt="Car Image"
+                            class="main-image">
+                    {% else %}
+                        <img src="https://via.placeholder.com/1000x600?text=No+Image+Available"
+                            class="main-image">
+                    {% endif %}
+
+                </div>
+
+                <!-- Car Overview -->
+                <div class="car-info-card slide-up">
+                    <div class="car-header">
+    <div class="car-header-left">
+        <h1 class="car-title">
+            {{ car.year }} {{ car.brand }} {{ car.model }}
+        </h1>
+
+        <div class="car-meta">
+            <span><i class="fas fa-map-marker-alt"></i> {{ car.city }}</span>
+            <span>{{ car.kms_driven }} km</span>
+            <span>{{ car.fuel_type }}</span>
+            <span>{{ car.transmission }}</span>
+        </div>
+    </div>
+
+    <div class="car-header-right">
+        <div class="price">
+₹{{ "%.2f"|format(car.price/100000) }} Lakh
+</div>
+        <div class="emi-text">
+            EMI starts at ₹{{ (car.price / 60)|int | string | replace(',', '') }}
+        </div>
+    </div>
+</div>
+
+
+
+                    <!-- Car Specifications -->
+                    <h3 class="mb-3">Car Specifications</h3>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="spec-label">Year</div>
+                            <div class="spec-value" id="carYear">{{ car.year }}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-gas-pump"></i>
+                            </div>
+                            <div class="spec-label">Fuel Type</div>
+                            <div class="spec-value" id="carFuel">{{ car.fuel_type }}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="spec-label">Transmission</div>
+                            <div class="spec-value" id="carTransmission">{{ car.transmission }}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="spec-label">Kilometers</div>
+                            <div class="spec-value" id="carKms">{{ car.kms_driven }} km</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="spec-label">Owners</div>
+                            <div class="spec-value" id="carOwners">
+                                {% if car.owners == 0 %}
+                                    1st Owner
+                                {% elif car.owners == 1 %}
+                                    2nd Owner
+                                {% elif car.owners == 2 %}
+                                    3rd Owner
+                                {% else %}
+                                    4+ Owners
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="spec-label">Location</div>
+                            <div class="spec-value" id="carLocation">{{ car.city }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="features-section slide-up">
+                    <h3 class="mb-4">Key Features</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-snowflake"></i>
+                                </div>
+                                <div>
+                                    <strong>Air Conditioning</strong>
+                                    <div class="text-muted">Manual AC with heater</div>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-music"></i>
+                                </div>
+                                <div>
+                                    <strong>Music System</strong>
+                                    <div class="text-muted">Touchscreen infotainment</div>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div>
+                                    <strong>Safety</strong>
+                                    <div class="text-muted">Dual airbags, ABS</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <strong>Power Steering</strong>
+                                    <div class="text-muted">Electric power steering</div>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-window-maximize"></i>
+                                </div>
+                                <div>
+                                    <strong>Power Windows</strong>
+                                    <div class="text-muted">All four power windows</div>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                <div>
+                                    <strong>Central Locking</strong>
+                                    <div class="text-muted">Remote central locking</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quality Report -->
+                <div class="quality-report slide-up">
+                    <h3 class="mb-4">Quality Report</h3>
+                    <div class="quality-score">
+                        <div class="score-circle">
+                            <div class="score-text">8.5/10</div>
+                        </div>
+                        <h5>Excellent Condition</h5>
+                        <p class="text-muted">157 points evaluated by automotive experts</p>
+                    </div>
+                    
+                    <div class="quality-items">
+                        <div class="quality-item">
+                            <div>
+                                <strong>Engine & Transmission</strong>
+                                <div class="text-muted">Smooth performance</div>
+                            </div>
+                            <span class="quality-status status-good">Good</span>
+                        </div>
+                        <div class="quality-item">
+                            <div>
+                                <strong>Exterior Condition</strong>
+                                <div class="text-muted">Minor scratches</div>
+                            </div>
+                            <span class="quality-status status-average">Average</span>
+                        </div>
+                        <div class="quality-item">
+                            <div>
+                                <strong>Interior Condition</strong>
+                                <div class="text-muted">Well maintained</div>
+                            </div>
+                            <span class="quality-status status-good">Good</span>
+                        </div>
+                        <div class="quality-item">
+                            <div>
+                                <strong>Electrical Systems</strong>
+                                <div class="text-muted">All working fine</div>
+                            </div>
+                            <span class="quality-status status-good">Good</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Benefits -->
+                <div class="benefits-section slide-up">
+                    <h4 class="mb-4">CarTradeX Benefits</h4>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div>
+                            <strong>200-Point Inspection</strong>
+                            <div>Comprehensive quality check</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <strong>6-Month Warranty</strong>
+                            <div>Engine & transmission covered</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div>
+                            <strong>7-Day Return Policy</strong>
+                            <div>No questions asked return</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <div>
+                            <strong>RC Transfer Assistance</strong>
+                            <div>Hassle-free documentation</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div>
+                            <strong>Free Home Delivery</strong>
+                            <div>Delivered to your doorstep</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Seller -->
+                <div class="car-info-card slide-up">
+                    <h4 class="mb-3">Contact Seller</h4>
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-user me-2 text-primary"></i>
+                            <strong>Verified Dealer</strong>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                            <span>Mumbai, Maharashtra</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-star me-2 text-warning"></i>
+                            <span>4.8/5 (124 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMI Calculator -->
+                <div class="car-info-card slide-up">
+                    <h4 class="mb-3">EMI Calculator</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Loan Amount</label>
+                        <input type="range" class="form-range" id="loanAmount" min="100000" max="1000000" value="650000" oninput="calculateEMI()">
+                        <div class="d-flex justify-content-between">
+                            <small>₹1L</small>
+                            <small id="loanAmountValue">₹6.5L</small>
+                            <small>₹10L</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tenure (Years)</label>
+                        <input type="range" class="form-range" id="tenure" min="1" max="7" value="5" oninput="calculateEMI()">
+                        <div class="d-flex justify-content-between">
+                            <small>1 Year</small>
+                            <small id="tenureValue">5 Years</small>
+                            <small>7 Years</small>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h5>Monthly EMI</h5>
+                        <div class="car-price" style="font-size: 1.5rem;" id="emiAmount">₹13,500</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons (Sticky) -->
+    <div class="action-buttons">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="footer-price-box">
+    <div class="footer-price">
+        ₹{{ "{:,}".format(car.price) }}
+    </div>
+    <div class="footer-sub">
+        EMI starts from ₹{{ (car.price / 60)|int }}
+    </div>
+</div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex gap-2 justify-content-end">
+                        <form method="POST" action="{{ url_for('toggle_wishlist', car_id=car.car_id) }}">
+
+                            {% if in_wishlist %}
+                                <button type="submit" class="btn btn-outline-custom">
+                                    <i class="fas fa-heart me-2"></i>Saved (Remove)
+                                </button>
+                            {% else %}
+                                <button type="submit" class="btn btn-outline-custom">
+                                    <i class="far fa-heart me-2"></i>Save
+                                </button>
+                            {% endif %}
+                        </form>
+<button class="btn btn-primary" id="buyBtn" data-id="{{ car.car_id }}">
+   Buy Now
+</button>
+
+
+
+                        <button class="btn btn-primary-custom" onclick="showContactModal()" style="margin-bottom: 50px;">
+                            <i class="fas fa-phone me-2"></i>Contact Seller
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">Contact Seller</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-phone text-primary" style="font-size: 3rem;"></i>
+                        <h4 class="mt-3">Call Now</h4>
+                        <h3 class="text-primary">+91 98765 43210</h3>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="tel:+919876543210" class="btn btn-primary-custom">
+                            <i class="fas fa-phone me-2"></i>Call Now
+                        </a>
+                        <button class="btn btn-outline-custom" onclick="scheduleCallback()">
+                            <i class="fas fa-calendar me-2"></i>Schedule Callback
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/car_details.js')}}"></script>
+{% endblock %}

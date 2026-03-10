@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+
+{% block title %}Buy a Car - CarTradeX{% endblock %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/buy.css')}}">
+{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+        <h1 class="display-4 fw-bold mb-3">Find Your Perfect Car</h1>
+        <p class="lead mb-4">
+          Discover thousands of quality vehicles from trusted dealers and
+          private sellers
+        </p>
+
+        <!-- Quick Search Bar -->
+        <!-- <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="d-flex gap-2 flex-wrap justify-content-center">
+              <input
+                type="text"
+                class="form-control search-bar flex-grow-1"
+                placeholder="Search by make, model, or keyword..."
+                id="quickSearch"
+              />
+              <button class="btn search-btn" onclick="performQuickSearch()">
+                <i class="fas fa-search me-2"></i>Search
+              </button>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">2,500+</div>
+          <div class="stats-label">Cars Available</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">98%</div>
+          <div class="stats-label">Customer Satisfaction</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">150+</div>
+          <div class="stats-label">Trusted Dealers</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stats-card">
+          <div class="stats-number">24/7</div>
+          <div class="stats-label">Support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+
+      <!-- Filters Sidebar -->
+      <div class="col-lg-3">
+        <div class="filter-sidebar position-sticky" style="top: 100px;" data-aos="fade-right">
+
+          <h4 class="filter-title">
+            <i class="fas fa-filter"></i> Filters
+          </h4>
+
+          <!-- Brand -->
+          <div class="filter-group block">
+            <label class="filter-label">Brands</label>
+            <label><input type="radio" class="filter" name="brand" value="Maruti Suzuki">Maruti Suzuki</label>
+            <label><input type="radio" class="filter" name="brand" value="Hyundai">Hyundai</label>
+            <label><input type="radio" class="filter" name="brand" value="Honda">Honda</label>
+            <label><input type="radio" class="filter" name="brand" value="Tata">Tata</label>
+            <label><input type="radio" class="filter" name="brand" value="Toyota">Toyota</label>
+            <label><input type="radio" class="filter" name="brand" value="Mahindra">Mahindra</label>
+            <label><input type="radio" class="filter" name="brand" value="Skoda">Skoda</label>
+            <label><input type="radio" class="filter" name="brand" value="Kia">Kia</label>
+            <label><input type="radio" class="filter" name="brand" value="Volkswagen">Volkswagen</label>
+            <label><input type="radio" class="filter" name="brand" value="Renault">Renault</label>
+          </div>
+
+          
+          <!-- Year -->
+          <div class="filter-group block">
+            <label class="filter-label">Year</label>
+            <label><input type="radio" class="filter" name="year" value="2024A">2024 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2023A">2022 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2020A">2020 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2018A">2018 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2016A">2016 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2014A">2014 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2012A">2012 & Above</label>
+            <label><input type="radio" class="filter" name="year" value="2010A">2010 & Above</label>
+          </div>
+
+          <!-- KMs Driven -->
+          <div class="filter-group block">
+            <label class="filter-label">KMs Driven</label>
+            <label><input type="radio" class="filter" name="kms" value="10000B">10,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="30000B">30,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="50000B">50,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="75000B">75,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="100000B">1,00,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="125000B">1,25,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="150000B">1,50,000 kms or less</label>
+            <label><input type="radio" class="filter" name="kms" value="175000B">1,75,000 kms or less</label>
+          </div>
+
+          <!-- Price -->
+          <!-- <div class="filter-group block">
+            <label class="filter-label">Price</label>
+            <label><input type="radio" class="filter" name="price" data-name="price" value="30000A"> 30000 & Above</label>
+            <label><input type="radio" class="filter" name="price" data-name="price" value="50000A"> 50000 & Above</label>
+          </div> -->
+
+          <!-- Fuel -->
+          <div class="filter-group block">
+            <label class="filter-label">Fuel Type</label>
+            <label><input type="checkbox" class="filter" name="fuel_type" value="PETROL">Petrol</label>
+            <label><input type="checkbox" class="filter" name="fuel_type" value="DIESEL"> Diesel</label>
+            <label><input type="checkbox" class="filter" name="fuel_type" value="ELECTRIC"> Electric</label>
+          </div>
+
+          <!-- Transmission -->
+          <div class="filter-group block">
+            <label class="filter-label">Transmission</label>
+            <label><input type="checkbox" class="filter" name="transmission" value="AUTOMATIC"> Automatic</label>
+            <label><input type="checkbox" class="filter" name="transmission" value="MANUAL"> Manual</label>
+          </div>
+
+          <!-- Seates -->
+          <!-- <div class="filter-group block">
+            <label class="filter-label">Seates</label>
+            <label><input type="checkbox" class="filter" name="seates" data-name="seates" value="4">4 seater</label>
+            <label><input type="checkbox" class="filter" name="seates" data-name="seates" value="5">5 seater</label>
+            <label><input type="checkbox" class="filter" name="seates" data-name="seates" value="6+">6+ seater</label>
+          </div> -->
+
+          <!-- Mileage -->
+          <!-- <div class="filter-group block">
+            <label class="filter-label">Mileage</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="0-25000"> Under 25,000</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="25000-50000"> 25,000 - 50,000</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="50000-75000"> 50,000 - 75,000</label>
+            <label><input type="radio" class="filter" id="mileagefilter" data-name="mileage" value="75001+"> Over 75,001</label>
+          </div> -->
+
+          <!-- City (NEW FILTER) -->
+<div class="filter-group block">
+  <label class="filter-label">City</label>
+  <label><input type="radio" class="filter" name="city" value="Rajkot">Rajkot</label>
+  <label><input type="radio" class="filter" name="city" value="Ahmedabad">Ahmedabad</label>
+  <label><input type="radio" class="filter" name="city" value="Mumbai">Mumbai</label>
+  <label><input type="radio" class="filter" name="city" value="Pune">Pune</label>
+  <label><input type="radio" class="filter" name="city" value="Jaipur">Jaipur</label>
+  <label><input type="radio" class="filter" name="city" value="Indore">Indore</label>
+  <label><input type="radio" class="filter" name="city" value="Goa">Goa</label>
+  <label><input type="radio" class="filter" name="city" value="Lucknow">Lucknow</label>
+  <label><input type="radio" class="filter" name="city" value="Delhi">Delhi</label>
+  <label><input type="radio" class="filter" name="city" value="Bangalore">Bangalore</label>
+  <label><input type="radio" class="filter" name="city" value="Chennai">Chennai</label>
+  <label><input type="radio" class="filter" name="city" value="Hyderabad">Hyderabad</label>
+  <label><input type="radio" class="filter" name="city" value="Kolkata">Kolkata</label>
+</div>
+
+<!-- Owners (NEW FILTER) -->
+<div class="filter-group block">
+  <label class="filter-label">Owners</label>
+  <label><input type="checkbox" class="filter" name="owners" value="1">1st Owner</label>
+  <label><input type="checkbox" class="filter" name="owners" value="2">2nd Owner</label>
+  <label><input type="checkbox" class="filter" name="owners" value="3">3+ Owners</label>
+</div>
+<p class="text-muted mb-0">You've reached the end</p>
+        </div>
+      </div>
+
+      <!-- Cars Listing -->
+      <div class="col-lg-9">
+        
+        <!-- Sort Controls -->
+        <div class="sort-controls d-flex justify-content-between align-items-center flex-wrap mb-3" data-aos="fade-left">
+          <div>
+            <h3 class="section-title mb-0">Available Cars</h3>
+            <p class="text-muted mb-0">Showing <span id="carCount"></span> cars</p>
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            <label class="fw-semibold text-muted">Sort by:</label>
+            <select class="form-select" style="width:auto" id="sortFilter">
+              <option value="newest">Newest First</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="mileage-low">Mileage: Low to High</option>
+              <option value="year-new">Year: Newest First</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Cars Grid -->
+        <div class="row" id="cars-container" data-aos="fade-up">
+          {% include "car_cards.html" %}
+        </div>
+
+        <!-- No Results -->
+        <div id="noResults" class="empty-state text-center d-none">
+          <i class="fas fa-car-crash"></i>
+          <h4>No cars found</h4>
+          <p>Try adjusting your filters</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="section-title">Buying FAQs</h2>
+      <p class="text-muted">Common questions about buying a car</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion" id="buyFaqAccordion">
+          <!-- FAQ 1 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="100">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#buyFaq1">
+                How can I verify the car's condition before buying?
+              </button>
+            </h2>
+            <div id="buyFaq1" class="accordion-collapse collapse show" data-bs-parent="#buyFaqAccordion">
+              <div class="accordion-body">
+                Every car on our platform comes with a detailed 200-point inspection report. You can also schedule a test drive and get a professional mechanic inspection before making your purchase decision.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="200">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#buyFaq2">
+                What payment methods are accepted?
+              </button>
+            </h2>
+            <div id="buyFaq2" class="accordion-collapse collapse" data-bs-parent="#buyFaqAccordion">
+              <div class="accordion-body">
+                We accept bank transfers, online payments, and financing options through our partner banks. All transactions are secure and documented for your safety.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="300">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#buyFaq3">
+                Is there a warranty on used cars?
+              </button>
+            </h2>
+            <div id="buyFaq3" class="accordion-collapse collapse" data-bs-parent="#buyFaqAccordion">
+              <div class="accordion-body">
+                Yes! Selected certified cars come with extended warranty options. You can choose from various warranty packages covering engine, transmission, and other major components.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/buy.js')}}"></script>
+{% endblock %}

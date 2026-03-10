@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Payment | CarTradeX{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block body %}
+
+<section class="py-5" style="background: #f5f7fb; min-height: 80vh;">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-body p-4">
+
+                        <h3 class="text-center mb-4 fw-bold">
+                            <i class="bi bi-credit-card-2-front-fill text-primary"></i>
+                            Car Purchase Payment
+                        </h3>
+
+                        <!-- Car Details -->
+                        <div class="alert alert-info mb-4">
+                            <h5 class="mb-2">{{ car.brand }} {{ car.model }} ({{ car.year }})</h5>
+                            <p class="mb-0">Price: <strong>₹{{ "{:,}".format(car.price) }}</strong></p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('process_buy_transaction', car_id=car.car_id) }}">
+
+                            <!-- Buyer Account -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    Your Account Number
+                                </label>
+                                <input type="text"
+                                       class="form-control form-control-lg"
+                                       name="buyer_account"
+                                       value="USER-ACC-{{ session.user_id }}"
+                                       readonly>
+                            </div>
+
+                            <!-- Admin Account (Receiver) -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    CarTradeX Account (Pay To)
+                                </label>
+                                <input type="text"
+                                       class="form-control form-control-lg"
+                                       value="ADMIN-ACC-001"
+                                       readonly>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">
+                                    Amount (₹)
+                                </label>
+                                <input type="number"
+                                       class="form-control form-control-lg"
+                                       name="amount"
+                                       value="{{ car.price }}"
+                                       readonly>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit"
+                                        class="btn btn-success btn-lg rounded-3">
+                                    <i class="bi bi-check-circle"></i>
+                                    Complete Payment
+                                </button>
+                                
+                                <a href="{{ url_for('car_details', car_id=car.car_id) }}" 
+                                   class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left"></i>
+                                    Back to Car Details
+                                </a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="text-center mt-3 text-muted small">
+                    🔒 Your payment is secure and encrypted
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}

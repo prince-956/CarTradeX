@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Sell Request - CarTradeX{% endblock %}
+
+{% block header %}{% endblock %}
+
+
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+
+        <h3 class="mb-4 text-primary">
+            Sell Request Details
+        </h3>
+
+        <div class="row">
+
+            <!-- Car Image -->
+            <div class="col-md-5">
+                <img src="{{ url_for('static', filename='images/'+request.image) }}"
+                     alt="Car Image"
+                     class="img-fluid rounded shadow">
+            </div>
+
+            <!-- Details -->
+            <div class="col-md-7">
+
+                <h4 class="mb-3">
+                    {{ request.brand }} {{ request.model }}
+                </h4>
+
+                <hr>
+
+                <h5 class="text-secondary">Seller Information</h5>
+
+                <p><strong>Owner Name:</strong> {{ request.name }}</p>
+                <p><strong>Mobile:</strong> {{ request.phone }}</p>
+                <p><strong>City:</strong> {{ request.city }}</p>
+
+                <hr>
+
+                <h5 class="text-secondary">Car Information</h5>
+
+                <p><strong>Number Plate:</strong> {{ request.number_plate }}</p>
+                <p><strong>Brand:</strong> {{ request.brand }}</p>
+                <p><strong>Model:</strong> {{ request.model }}</p>
+                <p><strong>Year:</strong> {{ request.year }}</p>
+                <p><strong>Fuel Type:</strong> {{ request.fuel_type }}</p>
+                <p><strong>Transmission:</strong> {{ request.transmission }}</p>
+                <p><strong>KMs Driven:</strong> {{ request.kms_driven }}</p>
+                <p><strong>Previous Owners:</strong> {{ request.owners }}</p>
+                <p><strong>Expected Price:</strong> ₹{{ request.price }}</p>
+
+                <hr>
+
+                <h5 class="text-secondary">Request Info</h5>
+
+                <p><strong>Request ID:</strong> {{ request.request_id }}</p>
+                <p><strong>Status:</strong> {{ request.status }}</p>
+
+                <div class="mt-4">
+
+                    <form action="{{ url_for('approve_request', request_id=request.request_id) }}"
+                          method="POST"
+                          style="display:inline;">
+                        <button class="btn btn-success">
+                            ✅ Approve
+                        </button>
+                    </form>
+
+                    <form action="{{ url_for('reject_request', request_id=request.request_id) }}"
+                          method="POST"
+                          style="display:inline;">
+                        <button class="btn btn-danger">
+                            ❌ Reject
+                        </button>
+                    </form>
+
+                    <a href="{{ url_for('admin') }}"
+                       class="btn btn-secondary">
+                        ← Back
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

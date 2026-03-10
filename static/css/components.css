@@ -1,0 +1,228 @@
+.trust-section {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 100px 0;
+}
+
+.trust-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: var(--shadow-light);
+  transition: all 0.3s ease;
+  height: 100%;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.trust-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--primary-gradient);
+}
+
+.trust-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-hover);
+}
+
+.trust-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 25px;
+  background: var(--info-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+}
+
+.trust-title {
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 15px;
+}
+
+.trust-description {
+  color: #718096;
+  line-height: 1.6;
+}
+
+
+.section-title {
+  font-weight: 800;
+  color: #2d3748;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 60%;
+  height: 4px;
+  background: var(--secondary-gradient);
+  border-radius: 2px;
+}
+
+.section-subtitle {
+  color: #718096;
+  font-size: 1.1rem;
+  margin-bottom: 50px;
+}
+
+
+.feature-card {
+  background: white;
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow: var(--shadow-light);
+  transition: all 0.3s ease;
+  height: 100%;
+  border: 2px solid #f7fafc;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+  border-color: #667eea;
+}
+
+.feature-icon {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 25px;
+  background: var(--primary-gradient);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: white;
+}
+
+.feature-title {
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 15px;
+}
+
+.feature-description {
+  color: #718096;
+  line-height: 1.6;
+}
+
+
+.stats-section {
+  background: var(--primary-gradient);
+  padding: 80px 0;
+  color: white;
+  position: relative;
+}
+
+.stats-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.05"><circle cx="100" cy="50" r="30"/><circle cx="300" cy="30" r="20"/><circle cx="500" cy="70" r="25"/><circle cx="700" cy="40" r="35"/><circle cx="900" cy="60" r="28"/></svg>')
+    repeat;
+}
+
+.stats-card {
+  text-align: center;
+  padding: 30px;
+  position: relative;
+}
+
+.stats-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.stats-label {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+
+
+.cta-btn {
+  padding: 18px 35px;
+  border-radius: 50px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cta-btn-primary {
+  background: white;
+  color: #f5576c;
+  border: 3px solid white;
+}
+
+.cta-btn-secondary {
+  background: transparent;
+  color: white;
+  border: 3px solid white;
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.cta-btn-primary:hover {
+  background: #f8f9fa;
+  color: #f5576c;
+}
+
+.cta-btn-secondary:hover {
+  background: white;
+  color: #f5576c;
+}
+
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-link {
+  width: 45px;
+  height: 45px;
+  background: var(--primary-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+  color: white;
+}

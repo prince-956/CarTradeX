@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+
+{% block title %}Sell Your Car - CarTradeX{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/sell.css')}}">
+{% endblock %}
+
+{% block body %}
+<main>
+<!-- Main Sell Section -->
+<section class="sell-hero">
+  <div class="container">
+    <div class="sell-content">
+      <h1 class="main-heading bounce-in">Sell Your Car at the Best Price</h1>
+      <p
+        class="sub-heading slide-in-up stagger-animation"
+        style="--delay: 0.2s"
+      >
+        Hassle-free selling with CarTradeX inspection & verification
+      </p>
+      <button
+        class="btn cta-button pulse-glow float stagger-animation"
+        style="--delay: 0.4s"
+        onclick="handleSellCarClick()"
+      >
+        <i class="fas fa-car me-2"></i>Sell My Car
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Sell Car Modal -->
+<div
+  class="modal fade"
+  id="sellCarModal"
+  tabindex="-1"
+  aria-labelledby="sellCarModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sellCarModalLabel">Sell Your Car</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar-custom">
+          <div class="progress-step active" data-step="1">
+            <div class="step-circle">1</div>
+            <div class="step-label">Owner Info</div>
+          </div>
+          <div class="progress-step" data-step="2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Car Details</div>
+          </div>
+          <div class="progress-step" data-step="3">
+            <div class="step-circle">3</div>
+            <div class="step-label">Final Details</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Step 1: Owner Information -->
+        <div class="step-content" id="step1">
+          <h4 class="mb-4">Owner Information</h4>
+          <form id="ownerForm">
+            <div class="form-group">
+              <label class="form-label">Owner Name *</label>
+              <input
+                type="text"
+                class="form-control"
+                id="ownerName"
+                name="owner_name"
+                placeholder="Enter your full name"
+                pattern="[A-Za-z]"
+                title="Only letters allowed"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mobile Number *</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="mobileNumber"
+                name="mobile"
+                placeholder="Enter 10-digit mobile number"
+                pattern="[0-9]{10}"
+                maxlength="10"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label">City *</label>
+              <select class="form-select" id="city" name="city" required>
+                <option value="">Select your city</option>
+                <option value="Rajkot">Rajkot</option>
+                <option value="Ahmedabad">Ahmedabad</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Pune">Pune</option>
+                <option value="Jaipur">Jaipur</option>
+                <option value="Indore">Indore</option>
+                <option value="Goa">Goa</option>
+                <option value="Lucknow">Lucknow</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Kolkata">Kolkata</option>
+              </select>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary-custom"
+              onclick="nextStep(2)"
+            >
+              Continue
+            </button>
+          </form>
+        </div>
+
+        <!-- Step 2: Car Details -->
+        <div class="step-content" id="step2" style="display: none">
+          <h4 class="mb-4">Car Details</h4>
+          <form id="carDetailsForm">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Car Brand *</label>
+                  <select class="form-select" id="carBrand" name="brand" required>
+                    <option value="">Select brand</option>
+                    <option value="Maruti Suzuki">Maruti Suzuki</option>
+                    <option value="Hyundai">Hyundai</option>
+                    <option value="Honda">Honda</option>
+                    <option value="Tata">Tata</option>
+                    <option value="Toyota">Toyota</option>
+                    <option value="Mahindra">Mahindra</option>
+                    <option value="Skoda">Skoda</option>
+                    <option value="Kia">Kia</option>
+                    <option value="Volkswagen">Volkswagen</option>
+                    <option value="Renault">Renault</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Car Model *</label>
+                  <select class="form-select" id="carModel" name="model" required>
+                    <option value="">Select model</option>
+                    <option value="Swift VXI">Swift VXI</option>
+                    <option value="Baleno Alpha">Baleno Alpha</option>
+                    <option value="i20 Sportz">i20 Sportz</option>
+                    <option value="Creta SX">Creta SX</option>
+                    <option value="City VX">City VX</option>
+                    <option value="Amaze S">Amaze S</option>
+                    <option value="Nexon XM">Nexon XM</option>
+                    <option value="Harrier XZ">Harrier XZ</option>
+                    <option value="Innova Crysta">Innova Crysta</option>
+                    <option value="Fortuner">Fortuner</option>
+                    <option value="XUV700 AX5">XUV700 AX5</option>
+                    <option value="Thar LX">Thar LX</option>
+                    <option value="Slavia Style">Slavia Style</option>
+                    <option value="Kushaq">Kushaq</option>
+                    <option value="Seltos HTX">Seltos HTX</option>
+                    <option value="Sonet GTX">Sonet GTX</option>
+                    <option value="Polo GT">Polo GT</option>
+                    <option value="Virtus">Virtus</option>
+                    <option value="Kiger RXZ">Kiger RXZ</option>
+                    <option value="Triber">Triber</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">Registration Year *</label>
+                  <select class="form-select" id="regYear" name="year" required>
+                    <option value="">Select year</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                    <option value="2016">2016</option>
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
+                    <option value="2013">2013</option>
+                    <option value="2012">2012</option>
+                    <option value="2011">2011</option>
+                    <option value="2010">2010</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">Fuel Type *</label>
+                  <select class="form-select" id="fuelType" name="fuel_type" required>
+                    <option value="">Select fuel type</option>
+                    <option value="PETROL">Petrol</option>
+                    <option value="DIESEL">Diesel</option>
+                    <option value="ELECTRIC">Electric</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">Transmission *</label>
+                  <select class="form-select" id="transmission" name="transmission" required>
+                    <option value="">Select transmission</option>
+                    <option value="MANUAL">Manual</option>
+                    <option value="AUTOMATIC">Automatic</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex gap-3">
+              <button
+                type="button"
+                class="btn btn-secondary-custom"
+                onclick="prevStep(1)"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary-custom flex-fill"
+                onclick="nextStep(3)"
+              >
+                Continue
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 3: Vehicle Condition & Price -->
+        <div class="step-content" id="step3" style="display: none">
+          <h4 class="mb-4">Vehicle Condition & Price</h4>
+          <form id="finalDetailsForm" action="/sell-car" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Kilometers Driven *</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="kmsDriven"
+                    name="kms"
+                    placeholder="e.g., 45000"
+                    min="0"
+                    max="500000"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Number of Previous Owners *</label>
+                  <select class="form-select" id="owners" name="owners" required>
+                    <option value="">Select owners</option>
+                    <option value="0">1st Owner (Me)</option>
+                    <option value="1">2nd Owner</option>
+                    <option value="2">3rd Owner</option>
+                    <option value="3+">4+ Owners</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+  <label class="form-label">Car Number Plate *</label>
+  <input
+    type="text"
+    class="form-control"
+    name="number_plate"
+    placeholder="e.g. GJ03CM1234"
+    pattern="[A-Z]{2}[0-9]{2}[A-Z]{1,2}[0-9]{4}"
+    style="text-transform:uppercase"
+    required
+  />
+</div>
+
+            <div class="form-group">
+              <label class="form-label">Expected Selling Price *</label>
+              
+<div id="priceSuggestion"
+     style="display:none; font-weight:600; color:#0d6efd; margin-bottom:8px;">
+    Suggested Market Price: ₹<span id="estimatedPrice">0</span>
+    (₹<span id="priceMin">0</span> – ₹<span id="priceMax">0</span>)
+</div>
+
+              
+              <div class="input-group">
+                <span class="input-group-text">₹</span>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="expectedPrice"
+                  name="price"
+                  placeholder="Enter expected price"
+                  min="100000"
+                  step="1000"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Upload Car Images</label>
+              <div
+                class="file-upload-area"
+                onclick="document.getElementById('carImages').click()"
+              >
+                <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-2"></i>
+                <p class="mb-1">Click to upload or drag and drop</p>
+                <small class="text-muted"
+                  >Upload multiple images of your car</small
+                >
+                <input
+                  type="file"
+                  id="carImages"
+                  name="images"
+                  accept="image/*"
+                  required
+                  style="display: none"
+                />
+              </div>
+              <div id="imagePreview" class="mt-3"></div>
+            </div>
+            <div class="d-flex gap-3">
+              <button
+                type="button"
+                class="btn btn-secondary-custom"
+                onclick="prevStep(2)"
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onclick="submitForm()"
+                class="btn btn-primary-custom flex-fill"
+              >
+                <i class="fas fa-check me-2"></i>Submit for Selling
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success State (Hidden initially) -->
+<div class="success-overlay" id="successOverlay" style="display: none">
+  <div class="container">
+    <div class="success-card fade-in">
+      <div class="success-icon">
+        <i class="fas fa-check fa-2x text-white"></i>
+      </div>
+      <h2 class="success-title">Your car has been added successfully!</h2>
+      <p class="success-message">
+        Our CarTradeX team will contact you shortly for inspection and further
+        selling process.
+      </p>
+      <div class="d-flex gap-3 justify-content-center">
+        <button class="btn btn-primary-custom" onclick="sellAnotherCar()">
+          <i class="fas fa-plus me-2"></i>Sell Another Car
+        </button>
+        <button class="btn btn-secondary-custom" onclick="viewListing()">
+          <i class="fas fa-eye me-2"></i>View My Car Listing
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Trust & Assurance Section -->
+<section class="trust-section" id="trustSection">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-3 col-sm-6">
+        <div
+          class="trust-card slide-in-left stagger-animation"
+          style="--delay: 0.1s"
+        >
+          <div class="trust-icon rotate-in">
+            <i class="fas fa-search"></i>
+          </div>
+          <h6 class="trust-title">Free Inspection</h6>
+          <p class="trust-description">
+            Professional 200-point inspection at your doorstep
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div
+          class="trust-card slide-in-up stagger-animation"
+          style="--delay: 0.2s"
+        >
+          <div class="trust-icon rotate-in">
+            <i class="fas fa-rupee-sign"></i>
+          </div>
+          <h6 class="trust-title">Best Market Price</h6>
+          <p class="trust-description">
+            Get the highest price based on current market value
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div
+          class="trust-card slide-in-up stagger-animation"
+          style="--delay: 0.3s"
+        >
+          <div class="trust-icon rotate-in">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h6 class="trust-title">Zero Hidden Charges</h6>
+          <p class="trust-description">
+            Complete transparency with no surprise fees
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div
+          class="trust-card slide-in-right stagger-animation"
+          style="--delay: 0.4s"
+        >
+          <div class="trust-icon rotate-in">
+            <i class="fas fa-file-contract"></i>
+          </div>
+          <h6 class="trust-title">Secure RC Transfer</h6>
+          <p class="trust-description">
+            Hassle-free documentation and ownership transfer
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/sell.js')}}"></script>
+{% endblock %}

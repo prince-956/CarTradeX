@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+
+{% block title %}CarTradeX-Home{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/home.css')}}">
+{% endblock %}
+
+{% block body %}
+<!-- Hero Section -->
+<section id="home" class="hero-section">
+  <div class="floating-cars">
+    <i class="fas fa-car"></i>
+  </div>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8 hero-content" data-aos="fade-up">
+        <h1 class="hero-title">
+          Buy & Sell Cars with
+          <span style="color: #ffd700">Complete Trust</span>
+        </h1>
+        <p class="hero-subtitle">
+          <i class="fas fa-check-circle me-2"></i>Certified Quality Cars •
+          <i class="fas fa-shield-alt me-2"></i>200-Point Inspection •
+          <i class="fas fa-handshake me-2"></i>Hassle-Free Process
+        </p>
+
+        <!-- Search Container -->
+<div class="search-container" data-aos="fade-up" data-aos-delay="200">
+  <div class="row g-3">
+
+    <!-- Brand -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">Car Brand</label>
+      <select class="form-select home-filter" name="brand">
+        <option value="">Select Brand</option>
+        <option value="Maruti Suzuki">Maruti Suzuki</option>
+        <option value="Hyundai">Hyundai</option>
+        <option value="Honda">Honda</option>
+        <option value="Tata">Tata</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Mahindra">Mahindra</option>
+        <option value="Skoda">Skoda</option>
+      </select>
+    </div>
+
+    <!-- Price -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">Price Range</label>
+      <select class="form-select home-filter" name="price">
+        <option value="">Select Price</option>
+        <option value="200000">Under 2 Lakh</option>
+        <option value="500000">2 - 5 Lakh</option>
+        <option value="800000">5 - 8 Lakh</option>
+        <option value="1000000">8 - 10 Lakh</option>
+        <option value="1000000+">10+ Lakh</option>
+      </select>
+    </div>
+
+    <!-- City -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">Location</label>
+      <select class="form-select home-filter" name="city">
+        <option value="">Select City</option>
+        <option value="Rajkot">Rajkot</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Pune">Pune</option>
+        <option value="Jaipur">Jaipur</option>
+        <option value="Indore">Indore</option>
+        <option value="Goa">Goa</option>
+        <option value="Lucknow">Lucknow</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Chennai">Chennai</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Kolkata">Kolkata</option>
+      </select>
+    </div>
+
+    <!-- KM -->
+    <div class="col-lg-3 col-md-6">
+      <label class="form-label fw-semibold text-muted">KM Driven</label>
+      <select class="form-select home-filter" name="kms">
+        <option value="">Select KM</option>
+        <option value="10000">10,000 kms or less</option>
+        <option value="30000">30,000 kms or less</option>
+        <option value="50000">50,000 kms or less</option>
+        <option value="75000">75,000 kms or less</option>
+        <option value="100000">1,00,000 kms or less</option>
+        <option value="125000">1,25,000 kms or less</option>
+        <option value="150000">1,50,000 kms or less</option>
+        <option value="175000">1,75,000 kms or less</option>
+      </select>
+    </div>
+
+    <!-- Search Button -->
+    <div class="col-lg-3 col-md-6 d-flex align-items-end">
+      <button class="btn search-btn w-100" onclick="searchCars()">
+        <i class="fas fa-search me-2"></i>Find My Car
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+        
+        <!-- Quick Action Buttons -->
+        <div
+          class="d-flex gap-3 flex-wrap"
+          data-aos="fade-up"
+          data-aos-delay="400"
+        >
+          <a
+            href="{{url_for('buy')}}"
+            class="btn btn-light btn-lg rounded-pill px-4"
+          >
+            <i class="fas fa-shopping-car me-2"></i>Browse Cars
+          </a>
+          <a
+            href="{{url_for('sell')}}"
+            class="btn btn-outline-light btn-lg rounded-pill px-4"
+          >
+            <i class="fas fa-dollar-sign me-2"></i>Sell Your Car
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust Section -->
+<section class="trust-section">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="section-title">Why Choose CarTradeX?</h2>
+      <p class="section-subtitle">
+        Experience the most trusted and transparent car buying & selling
+        platform
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="trust-card">
+          <div class="trust-icon">
+            <i class="fas fa-certificate"></i>
+          </div>
+          <h5 class="trust-title">Certified Quality Cars</h5>
+          <p class="trust-description">
+            Every vehicle undergoes our comprehensive 200-point inspection
+            process ensuring top quality and reliability.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="trust-card">
+          <div class="trust-icon">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <h5 class="trust-title">Verified Sellers</h5>
+          <p class="trust-description">
+            All sellers are verified with proper documentation and background
+            checks for your peace of mind.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="trust-card">
+          <div class="trust-icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <h5 class="trust-title">Transparent Pricing</h5>
+          <p class="trust-description">
+            No hidden fees, no surprise charges. What you see is exactly what
+            you pay - completely transparent.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="section-title">Complete Car Solutions</h2>
+      <p class="section-subtitle">
+        From buying to selling, we've got everything covered for your automotive
+        needs
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-car"></i>
+          </div>
+          <h5 class="feature-title">Wide Selection</h5>
+          <p class="feature-description">
+            Browse thousands of quality cars from trusted dealers and private
+            sellers.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-credit-card"></i>
+          </div>
+          <h5 class="feature-title">Easy Financing</h5>
+          <p class="feature-description">
+            Get pre-approved for loans with competitive rates and flexible
+            terms.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-tools"></i>
+          </div>
+          <h5 class="feature-title">Professional Inspection</h5>
+          <p class="feature-description">
+            Comprehensive vehicle inspection reports available for every car.
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h5 class="feature-title">24/7 Support</h5>
+          <p class="feature-description">
+            Round-the-clock customer support to assist you throughout your
+            journey.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container">
+    <div class="row text-center">
+      <div
+        class="col-lg-3 col-md-6 mb-4"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        <div class="stats-card">
+          <span class="stats-number" data-count="2500">0</span>
+          <div class="stats-label">Cars Available</div>
+        </div>
+      </div>
+      <div
+        class="col-lg-3 col-md-6 mb-4"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
+        <div class="stats-card">
+          <span class="stats-number" data-count="15000">0</span>
+          <div class="stats-label">Happy Customers</div>
+        </div>
+      </div>
+      <div
+        class="col-lg-3 col-md-6 mb-4"
+        data-aos="fade-up"
+        data-aos-delay="300"
+      >
+        <div class="stats-card">
+          <span class="stats-number" data-count="150">0</span>
+          <div class="stats-label">Trusted Dealers</div>
+        </div>
+      </div>
+      <div
+        class="col-lg-3 col-md-6 mb-4"
+        data-aos="fade-up"
+        data-aos-delay="400"
+      >
+        <div class="stats-card">
+          <span class="stats-number" data-count="98">0</span>
+          <div class="stats-label">Success Rate %</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">
+        Find answers to common questions about buying and selling cars
+      </p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion" id="faqAccordion">
+          <!-- FAQ 1 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="100">
+            <h2 class="accordion-header">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                How does CarTradeX ensure car quality?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Every car listed on CarTradeX undergoes a comprehensive 200-point inspection covering engine, transmission, brakes, suspension, electrical systems, and more. We provide detailed inspection reports for complete transparency.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="200">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                What documents do I need to sell my car?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                You'll need your vehicle's Registration Certificate (RC), valid insurance, PUC certificate, service records, and a valid ID proof. Our team will guide you through entire documentation process.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="300">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                How long does it take to sell my car?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Once your car is listed and approved, it typically takes 7-15 days to find a buyer. However, popular models in good condition can sell within 3-5 days. We ensure maximum visibility for your listing.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="400">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                Are there any hidden charges?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                No, we believe in complete transparency. All charges are clearly mentioned upfront. There are no hidden fees or surprise costs. What you see is what you pay.
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 5 -->
+          <div class="accordion-item" data-aos="fade-up" data-aos-delay="500">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                Can I test drive a car before buying?
+              </button>
+            </h2>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">
+                Absolutely! We encourage test drives for all our listed vehicles. You can schedule a test drive at your convenience, and our team will arrange everything for you.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="cta-section" id="sell-car">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center" data-aos="fade-up">
+        <h2 class="cta-title">Ready to Get Started?</h2>
+        <p class="cta-subtitle">
+          Join thousands of satisfied customers who trust CarTradeX for their
+          automotive needs
+        </p>
+        <div class="cta-buttons">
+          <a href="{{url_for('buy')}}" class="cta-btn cta-btn-primary">
+            <i class="fas fa-search"></i>
+            Find Your Dream Car
+          </a>
+          <a href="{{url_for('sell')}}" class="cta-btn cta-btn-secondary">
+            <i class="fas fa-dollar-sign"></i>
+            Sell Your Car Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static', filename='js/home.js')}}"></script>
+{% endblock %}
