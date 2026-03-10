@@ -115,7 +115,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Car</th>
-                                                <th>Seller</th>
+                                                
                                                 <th>Price</th>
                                                 <th>Status</th>
                                                 <th>Date</th>
@@ -125,7 +125,7 @@
                                             {% for car in recent_listings %}
                                             <tr>
                                                 <td><strong>{{ car.brand }} {{ car.model }}</strong></td>
-                                                <td>{{ car.user_id }}</td>
+                                                
                                                 <td>₹{{ car.price }}</td>
                                                 <td>
                                                     <span class="status-badge status-{{ car.status|lower }}">
@@ -243,23 +243,7 @@
            View Car
         </a>
 
-        <!-- APPROVE -->
-        <form action="{{ url_for('approve_request', request_id=p.request_id) }}" 
-              method="POST" 
-              style="display:inline;">
-            <button class="btn btn-success btn-sm">
-                Approve
-            </button>
-        </form>
-
-        <!-- REJECT -->
-        <form action="{{ url_for('reject_request', request_id=p.request_id) }}" 
-              method="POST" 
-              style="display:inline;">
-            <button class="btn btn-danger btn-sm">
-                Reject
-            </button>
-        </form>
+        
     </td>
 </tr>
 {% endfor %}
